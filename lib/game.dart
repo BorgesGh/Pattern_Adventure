@@ -3,7 +3,9 @@ import 'package:bonfire/map/tiled/reader/tiled_asset_reader.dart';
 import 'package:bonfire/widgets/bonfire_widget.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:jogo_tabuleiro/Player.dart';
+import 'package:jogo_tabuleiro/components/GameController.dart';
+import 'package:jogo_tabuleiro/components/Player.dart';
+import 'package:jogo_tabuleiro/domain/Atlas.dart';
 
 class BoardGame extends StatelessWidget {
   static double tileSize = 32;
@@ -14,7 +16,11 @@ class BoardGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Jogador jogador = Jogador(position: Vector2(15 * tileSize, 9 * tileSize), size: Jogador.JogadorSize);
+    GameController controller = GameController();
+
+    //Inicia o Jogador no primeiro mapa e no primeiro ponto do mapa
+    Jogador jogador = Jogador(position: controller.getPosicaoInicial(),
+        size: Jogador.JogadorSize, caminho: controller.getProximoMapa().caminhoPrincipal);
 
     return BonfireWidget(
       map: WorldMapByTiled(
@@ -23,7 +29,7 @@ class BoardGame extends StatelessWidget {
 
         // https://opengameart.org/content/slates-32x32px-orthogonal-tileset-by-ivan-voirol
           WorldMapReader.fromAsset(
-            'tiled/Mapa-Floresta.json',
+              controller.getProximoMapa().caminhoDoArquivo
           ),
       ),
       cameraConfig: CameraConfig(
@@ -34,6 +40,7 @@ class BoardGame extends StatelessWidget {
 
       components: [
         jogador,
+        GameController(),
       ],
     );
   }
