@@ -1,0 +1,15 @@
+{ "columns":56,
+ "image":"Slates v.2 [32x32px orthogonal tileset by Ivan Voirol].png",
+ "imageheight":736,
+ "imagewidth":1792,
+ "orientation":"orthogonal",
+ "margin":0,
+ "name":"Slates v.2 [32x32px orthogonal tileset by Ivan Voirol]",
+ "spacing":0,
+ "tilecount":1288,
+ "tiledversion":"1.11.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.10"
+}
