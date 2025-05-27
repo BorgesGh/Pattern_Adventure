@@ -1,13 +1,17 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/player/player.dart';
 import 'package:flame/events.dart';
+import 'package:flutter/material.dart';
+import 'package:jogo_tabuleiro/components/HudDoJogador.dart';
 import 'package:jogo_tabuleiro/domain/MapTile.dart';
 
 import '../domain/Mapa.dart';
 import '../game.dart';
-import 'DialogPergunta.dart';
+import '../widgets/DialogPergunta.dart';
+import 'StatusDoJogador.dart';
 
 class Jogador extends SimplePlayer with PathFinding {
   static var JogadorSize = Vector2.all(MapTile.tileSize);
@@ -15,24 +19,20 @@ class Jogador extends SimplePlayer with PathFinding {
   Mapa mapa;
   List<int> indexDePerguntas = [];
   List<MapTile> caminho = [];
+  StatusDoJogador statusDoJogador;
 
   Jogador({
     required super.position,
     required super.size,
     required this.mapa,
     required this.indexDePerguntas,
+    required this.statusDoJogador,
   }) {
     caminho = mapa.caminhoPrincipal; // atribui o caminho do mapa ao jogador
   }
-
   @override
-  void render(Canvas canvas) {
-    canvas.drawCircle(
-      Offset.zero,
-      JogadorSize.x / 2,
-      Paint()..color = const Color(0xFF00FF00),
-    );
-    super.render(canvas);
+  Future<void> onLoad() {
+    return super.onLoad();
   }
 
   @override
@@ -57,6 +57,7 @@ class Jogador extends SimplePlayer with PathFinding {
 
     for (int i = 0; i < caminho.length; i++) {
       final destino = caminho[i].position;
+      final pergunta = caminho[i].pergunta;
 
       while ((position - destino).length > 1.0) {
         final direcao = (destino - position).normalized();
@@ -72,10 +73,33 @@ class Jogador extends SimplePlayer with PathFinding {
       position = destino;
 
       if (indicesDeParada.contains(i)) {
-        print('Parado no ponto de pergunta $i: $destino');
-        await Future.delayed(const Duration(seconds: 2));
+        print("Parado no ponto de pergunta ${i} em $destino");
 
-        // Aqui você pode abrir uma pergunta, exibir algo, etc.
+        // Espera a resposta da pergunta antes de continuar
+        final completer = Completer<void>();
+
+        await showDialog(
+          context: gameRef.context, // <- você precisa ter acesso a esse contexto!
+          barrierDismissible: false,
+          builder: (context) {
+            return DialogPergunta(
+              pergunta: pergunta!, // <- instância da classe Pergunta
+              texturaBotao: 'assets/images/back-madeira.jpg',
+              texturaDialog: 'backgrounds/caixa_dialogo_madeira.png',
+              onRespondido: (bool acertou) {
+                // Você pode lidar com o resultado aqui
+                if (acertou) {
+                  statusDoJogador.acertouPergunta();
+                } else {
+                  statusDoJogador.errouPergunta();
+                }
+                 completer.complete();
+              },
+            );
+          },
+        );
+
+        await completer.future; // Espera até o jogador responder
       }
 
       // Pequena pausa opcional entre os movimentos
@@ -83,5 +107,15 @@ class Jogador extends SimplePlayer with PathFinding {
     }
 
     print("Caminho finalizado!");
+  }
+
+  @override
+  void render(Canvas canvas) {
+    canvas.drawCircle(
+      Offset.zero,
+      JogadorSize.x / 2,
+      Paint()..color = const Color(0xFF00FF00),
+    );
+    super.render(canvas);
   }
 }
