@@ -4,10 +4,11 @@ import 'package:bonfire/widgets/bonfire_widget.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:jogo_tabuleiro/components/GameController.dart';
+import 'package:jogo_tabuleiro/components/HudDoJogador.dart';
 import 'package:jogo_tabuleiro/components/Player.dart';
 import 'package:jogo_tabuleiro/domain/Atlas.dart';
-import 'package:jogo_tabuleiro/components/DialogPergunta.dart';
 
+import 'components/StatusDoJogador.dart';
 import 'components/TrocaMapaSensor.dart';
 import 'domain/MapTile.dart';
 import 'domain/Mapa.dart';
@@ -21,6 +22,7 @@ class BoardGame extends StatefulWidget {
 
 class _BoardGameState extends State<BoardGame> {
   final GameController controller = GameController();
+  final StatusDoJogador status = StatusDoJogador();
   late Jogador jogador;
   int mapaAtual = 0;
 
@@ -37,6 +39,7 @@ class _BoardGameState extends State<BoardGame> {
       size: Jogador.JogadorSize,
       mapa: mapa,
       indexDePerguntas: controller.atlas.indiceDePerguntas,
+      statusDoJogador: status,
     );
   }
 
@@ -56,13 +59,14 @@ class _BoardGameState extends State<BoardGame> {
         WorldMapReader.fromAsset(mapa.caminhoDoArquivo),
       ),
       cameraConfig: CameraConfig(
-        moveOnlyMapArea: true,
+        moveOnlyMapArea: true, // true
         initialMapZoomFit: InitialMapZoomFitEnum.fitWidth,
-        initPosition: Mapa.centroDoMapa,
+        initPosition: Mapa.centroDoMapa
       ),
       components: [
         jogador,
         controller,
+        HudDoJogador(status),
         TrocaMapaSensor(
           onTrocaMapa: trocarMapa,
           position: mapa.caminhoPrincipal.last.position, // Ultimo lugar que o jogador deve chegar

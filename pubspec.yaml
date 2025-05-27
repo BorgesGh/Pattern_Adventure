@@ -64,6 +64,8 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/Molde Pergunta.png
+    - assets/images/back-madeira.jpg
     - assets/images/tiled/
     - assets/images/tiled/Mapa.json
     - assets/images/player/

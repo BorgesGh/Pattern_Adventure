@@ -4,6 +4,8 @@ import 'game.dart';
 
 void main() {
   runApp(const BoardGameApp());
+
+  // TODO: Setar a orientação da tela em LandScape (Deitado)
 }
 
 class BoardGameApp extends StatelessWidget {
