@@ -2,7 +2,6 @@ import 'package:bonfire/base/game_component.dart';
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/base/layer.dart';
 import 'package:flutter/material.dart';
-import 'package:jogo_tabuleiro/components/DialogPergunta.dart';
 import 'package:jogo_tabuleiro/components/LocalDePergunta.dart';
 import 'package:jogo_tabuleiro/domain/Mapa.dart';
 
@@ -25,7 +24,7 @@ class GameController extends GameComponent{
         // gameRef.add(Dialogpergunta(pergunta: element.pergunta!));
         gameRef.map.add(
           LocalDePergunta(
-            cor: Colors.red,
+            dificuldade: element.pergunta!.dificuldade,
             posicao: element.position,
           ),
         );
