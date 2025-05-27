@@ -28,8 +28,7 @@ class Atlas {
         caminhoDoArquivo: 'tiled/Mapa-Floresta.json',
         nomeMapa: 'Floresta',
         caminhoPrincipal: [
-          // De (0, 12) até (9, 12)
-          MapTile(position: Vector2(0 * MapTile.tileSize, 13 * MapTile.tileSize), pergunta: Pergunta(pergunta: 'Qual é a capital do Brasil?', solucao: 'Brasília')),
+          // De (1, 12) até (9, 12)
           MapTile(position: Vector2(1 * MapTile.tileSize, 13 * MapTile.tileSize)),
           MapTile(position: Vector2(2 * MapTile.tileSize, 13 * MapTile.tileSize)),
           MapTile(position: Vector2(3 * MapTile.tileSize, 13 * MapTile.tileSize)),
@@ -81,8 +80,10 @@ class Atlas {
     print("Tamanho do Vetor de caminhos: ${caminhos.length}");
 
     caminhos.asMap().forEach((index, caminho) {
-      if (Random.secure().nextInt(100) < 40) { // 40% chance of adding a question
-        caminho.pergunta = Pergunta(pergunta: 'Pergunta aleatória', solucao: 'Resposta aleatória');
+      if (Random.secure().nextInt(100) < 100 && caminho.pergunta == null && index > 2) { // 40% chance of adding a question
+        caminho.pergunta = Pergunta(pergunta: 'Pergunta aleatória', solucao: 'Resposta aleatória',
+            alternativas: ['Alternativa 1', 'Alternativa 2', 'Alternativa 3', 'Alternativa 4'], indexSolucao: 1,
+        dificuldade: Dificuldade.values[Random.secure().nextInt(Dificuldade.values.length)]);
         indiceDePerguntas.add(index); // Add the index to the list
       } else {
         caminho.pergunta = null;
