@@ -1,13 +1,16 @@
 import 'dart:ui';
 
 import 'package:bonfire/base/game_component.dart';
+import 'package:jogo_tabuleiro/domain/MapTile.dart';
 import 'package:jogo_tabuleiro/game.dart';
 
 class Pergunta extends GameComponent{
 
+  late String pergunta;
+  late String solucao;
 
-  @override
-  void render(Canvas canvas) {
-    canvas.drawRect(Rect.fromLTWH(BoardGame.tileSize, BoardGame.tileSize, BoardGame.tileSize, BoardGame.tileSize), Paint()..color = const Color(0xFF0000FF));
-  }
+  Pergunta({
+    required this.pergunta,
+    required this.solucao,
+  });
 }

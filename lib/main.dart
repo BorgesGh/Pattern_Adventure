@@ -12,6 +12,7 @@ class BoardGameApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Board Game',
       theme: ThemeData(
         primarySwatch: Colors.blue,

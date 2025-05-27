@@ -1,10 +1,15 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:jogo_tabuleiro/domain/MapTile.dart';
 
 class Mapa {
 
+  static Vector2 centroDoMapa =  Vector2(15 * MapTile.tileSize, 9 * MapTile.tileSize);
+
   String caminhoDoArquivo;
   String nomeMapa;
-  List<Vector2> caminhoPrincipal;
+  List<MapTile> caminhoPrincipal;
+
+  get caminhoPrincipalVector2 => caminhoPrincipal.map((m) => m.position).toList();
 
   Mapa({
     required this.caminhoDoArquivo,

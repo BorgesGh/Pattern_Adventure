@@ -6,42 +6,70 @@ import 'package:flutter/cupertino.dart';
 import 'package:jogo_tabuleiro/components/GameController.dart';
 import 'package:jogo_tabuleiro/components/Player.dart';
 import 'package:jogo_tabuleiro/domain/Atlas.dart';
+import 'package:jogo_tabuleiro/components/DialogPergunta.dart';
 
-class BoardGame extends StatelessWidget {
-  static double tileSize = 32;
+import 'components/TrocaMapaSensor.dart';
+import 'domain/MapTile.dart';
+import 'domain/Mapa.dart';
 
-
+class BoardGame extends StatefulWidget {
   const BoardGame({super.key});
 
   @override
+  State<BoardGame> createState() => _BoardGameState();
+}
+
+class _BoardGameState extends State<BoardGame> {
+  final GameController controller = GameController();
+  late Jogador jogador;
+  int mapaAtual = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    carregarMapa();
+  }
+
+  void carregarMapa() {
+    var mapa = controller.getMapaPorIndice(mapaAtual);
+    jogador = Jogador(
+      position: controller.getPosicaoInicial(),
+      size: Jogador.JogadorSize,
+      mapa: mapa,
+      indexDePerguntas: controller.atlas.indiceDePerguntas,
+    );
+  }
+
+  void trocarMapa() {
+    setState(() {
+      mapaAtual++;
+      carregarMapa();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-
-    GameController controller = GameController();
-
-    //Inicia o Jogador no primeiro mapa e no primeiro ponto do mapa
-    Jogador jogador = Jogador(position: controller.getPosicaoInicial(),
-        size: Jogador.JogadorSize, caminho: controller.getProximoMapa().caminhoPrincipal);
+    final mapa = controller.getMapaPorIndice(mapaAtual);
 
     return BonfireWidget(
       map: WorldMapByTiled(
-        //Dentro do seu arquivo de Mapa.json, altere o parâmetro tilesets > source para o nome
-        //Do arquivo tileset gerado em json, por meio do Tiled.
-
-        // https://opengameart.org/content/slates-32x32px-orthogonal-tileset-by-ivan-voirol
-          WorldMapReader.fromAsset(
-              controller.getProximoMapa().caminhoDoArquivo
-          ),
+        WorldMapReader.fromAsset(mapa.caminhoDoArquivo),
       ),
       cameraConfig: CameraConfig(
-        moveOnlyMapArea: true, // Permitir apenas mostrar o mapa
-        initialMapZoomFit: InitialMapZoomFitEnum.fitWidth, // Fit com base no wdth da tela
-        initPosition: Vector2(15 * tileSize, 9 * tileSize), // Posição inicial da câmera, centralizado na camera
+        moveOnlyMapArea: true,
+        initialMapZoomFit: InitialMapZoomFitEnum.fitWidth,
+        initPosition: Mapa.centroDoMapa,
       ),
-
       components: [
         jogador,
-        GameController(),
+        controller,
+        TrocaMapaSensor(
+          onTrocaMapa: trocarMapa,
+          position: mapa.caminhoPrincipal.last.position, // Ultimo lugar que o jogador deve chegar
+          size: Vector2.all(MapTile.tileSize),
+        ),
       ],
     );
   }
 }
+
