@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:flutter/material.dart';
 import 'package:jogo_tabuleiro/domain/MapTile.dart';
 
 class CharacterSpriteSheet{
@@ -31,4 +32,14 @@ class CharacterSpriteSheet{
         texturePosition: Vector2(0,MapTile.tileSize + 5)
     ),
   );
+
+  static Image getRostoNeutro() {
+    return Image.asset('assets/images/character/player-neutro.png',height: 100);
+  }
+  static Image getRostoFeliz() {
+    return Image.asset('assets/images/character/player-feliz.png',height: 100);
+  }
+  static Image getRostoTriste() {
+    return Image.asset('assets/images/character/player-triste.png',height: 100);
+  }
 }

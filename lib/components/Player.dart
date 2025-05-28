@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/player/player.dart';
 import 'package:flame/events.dart';
@@ -22,6 +21,10 @@ class Jogador extends SimplePlayer with PathFinding {
   List<MapTile> caminho = [];
   StatusDoJogador statusDoJogador;
 
+  late Image rostoNeutro;
+  late Image rostoFeliz;
+  late Image rostoTriste;
+
   Jogador({
     required Vector2 position,
     required super.size,
@@ -38,8 +41,22 @@ class Jogador extends SimplePlayer with PathFinding {
   }
 
   @override
-  void onMount() {
+  Future<void> onLoad() {
+    rostoFeliz = CharacterSpriteSheet.getRostoFeliz();
+    rostoNeutro = CharacterSpriteSheet.getRostoNeutro();
+    rostoTriste = CharacterSpriteSheet.getRostoTriste();
+    return super.onLoad();
+  }
+
+  @override
+  Future<void> onMount() async {
     // debugMode = true;
+
+    final completerDialogoIntro = Completer<void>();
+
+    _intro(completerDialogoIntro);
+
+    await completerDialogoIntro.future;
 
     Future.delayed(const Duration(seconds: 1), () {
       if (caminho.isNotEmpty) {
@@ -124,13 +141,55 @@ class Jogador extends SimplePlayer with PathFinding {
     MapNavigator.of(context).toNamed('/mapa-agua'); // Muda para o próximo mapa após completar o caminho
   }
 
-  // @override
-  // void render(Canvas canvas) {
-  //   canvas.drawCircle(
-  //     Offset.zero,
-  //     JogadorSize.x / 2,
-  //     Paint()..color = const Color(0xFF00FF00),
-  //   );
-  //   super.render(canvas);
-  // }
+  void _intro(Completer completerTalk) {
+    TalkDialog.show(gameRef.context, [
+      Say(
+        person: rostoNeutro,
+        text: [
+          const TextSpan(
+            text: "Onde eu estou?\n",
+            style: TextStyle(color: Colors.white, fontSize: 30),
+          ),
+        ],
+      ),
+      Say(
+        person: rostoNeutro,
+        text: [
+          const TextSpan(
+            text: 'Eu estava na minha cama agora mesmo e derrepente...\n',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ],
+      ),
+      Say(
+        person: rostoNeutro,
+        text: [
+          const TextSpan(
+            text: 'Acho que eu estava sonhando, semana que vem tinha prova de padrões de projeto\n',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ],
+      ),
+      Say(
+        person: rostoTriste,
+        text: [
+          const TextSpan(
+            text: 'Droga! Eu sabia que não ia dar tempo para estudar!\n',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ],
+      ),
+      Say(
+        person: rostoNeutro,
+        text: [
+          const TextSpan(
+            text: 'Tudo bem.. Eu vejo isso depois. Mas primeiro preciso sair daqui.\n',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ],
+      )]).then((_){
+      completerTalk.complete();
+    });
+
+  }
 }
