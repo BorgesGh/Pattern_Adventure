@@ -10,6 +10,7 @@ import 'package:jogo_tabuleiro/domain/MapTile.dart';
 
 import '../domain/Mapa.dart';
 import '../game.dart';
+import '../utils/CharacterSpriteSheet.dart';
 import '../widgets/DialogPergunta.dart';
 import 'StatusDoJogador.dart';
 
@@ -22,17 +23,18 @@ class Jogador extends SimplePlayer with PathFinding {
   StatusDoJogador statusDoJogador;
 
   Jogador({
-    required super.position,
+    required Vector2 position,
     required super.size,
     required this.mapa,
     required this.indexDePerguntas,
     required this.statusDoJogador,
-  }) {
+
+  }) : super(
+    animation: CharacterSpriteSheet(fileName: 'player.png').getAnimation(),
+    speed: 40,
+    position: Vector2(position.x - MapTile.tileSize / 2, position.y - MapTile.tileSize / 2),
+  ) {
     caminho = mapa.caminhoPrincipal; // atribui o caminho do mapa ao jogador
-  }
-  @override
-  Future<void> onLoad() {
-    return super.onLoad();
   }
 
   @override
@@ -55,9 +57,21 @@ class Jogador extends SimplePlayer with PathFinding {
     const double velocidade = 50; // pixels por segundo
     const double intervalo = 0.016; // segundos (aprox. 60 FPS)
 
+    // TalkDialog.show(context,
+    //     [
+    //       Say(text: [
+    //         const TextSpan(
+    //           text: "Que parada ein meu nobre aventureiro!\n",
+    //           style: TextStyle(color: Colors.white, fontSize: 20),
+    //         ),
+    //       ] )
+    //     ],
+    // );
+
     for (int i = 0; i < caminho.length; i++) {
-      final destino = caminho[i].position;
+      final destino = Vector2(caminho[i].position.x - MapTile.tileSize / 2, caminho[i].position.y - MapTile.tileSize / 2) ;
       final pergunta = caminho[i].pergunta;
+
 
       while ((position - destino).length > 1.0) {
         final direcao = (destino - position).normalized();
@@ -109,13 +123,13 @@ class Jogador extends SimplePlayer with PathFinding {
     print("Caminho finalizado!");
   }
 
-  @override
-  void render(Canvas canvas) {
-    canvas.drawCircle(
-      Offset.zero,
-      JogadorSize.x / 2,
-      Paint()..color = const Color(0xFF00FF00),
-    );
-    super.render(canvas);
-  }
+  // @override
+  // void render(Canvas canvas) {
+  //   canvas.drawCircle(
+  //     Offset.zero,
+  //     JogadorSize.x / 2,
+  //     Paint()..color = const Color(0xFF00FF00),
+  //   );
+  //   super.render(canvas);
+  // }
 }

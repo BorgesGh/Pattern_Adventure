@@ -12,6 +12,7 @@ class HudDoJogador extends GameComponent {
 
   @override
   void render(Canvas canvas) {
+    //TODO fazer fundo da informaçãos ou posicionar de acorodo com a tela para ficar fixo.
     TextPaint tp = TextPaint(
       style: const TextStyle(
         color: Colors.white,

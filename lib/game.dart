@@ -39,13 +39,15 @@ class _BoardGameState extends State<BoardGame> {
       size: Jogador.JogadorSize,
       mapa: mapa,
       indexDePerguntas: controller.atlas.indiceDePerguntas,
-      statusDoJogador: status,
+      statusDoJogador: status
     );
   }
 
   void trocarMapa() {
+    //TODO Fazer uma transição suave entre os mapas, uma tela de transição.
     setState(() {
       mapaAtual++;
+      print(mapaAtual);
       carregarMapa();
     });
   }
@@ -74,6 +76,10 @@ class _BoardGameState extends State<BoardGame> {
         ),
       ],
     );
+  }
+
+  void gameOver(){
+    //TODO Fim do jogo quando a vida do jogador atinge 0
   }
 }
 

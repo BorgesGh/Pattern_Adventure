@@ -64,6 +64,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/character/
     - assets/images/Molde Pergunta.png
     - assets/images/back-madeira.jpg
     - assets/images/tiled/

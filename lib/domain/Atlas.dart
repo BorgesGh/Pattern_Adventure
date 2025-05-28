@@ -71,6 +71,39 @@ class Atlas {
 
         ],
       ),
+      Mapa(
+        caminhoDoArquivo: 'tiled/Mapa-agua.json',
+        nomeMapa: "Praia projetista",
+        caminhoPrincipal: [
+          // De (4, 9) até (21, 9)
+          MapTile(position: Vector2(4 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(5 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(6 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(7 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(8 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(9 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(10 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(11 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(12 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(13 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(14 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(15 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(16 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(17 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(18 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(19 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(20 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(21 * MapTile.tileSize, 9 * MapTile.tileSize)),
+
+// De (21, 9) até (21, 14)
+          MapTile(position: Vector2(21 * MapTile.tileSize, 10 * MapTile.tileSize)),
+          MapTile(position: Vector2(21 * MapTile.tileSize, 11 * MapTile.tileSize)),
+          MapTile(position: Vector2(21 * MapTile.tileSize, 12 * MapTile.tileSize)),
+          MapTile(position: Vector2(21 * MapTile.tileSize, 13 * MapTile.tileSize)),
+          MapTile(position: Vector2(21 * MapTile.tileSize, 14 * MapTile.tileSize)),
+
+        ],
+      )
     ];
   }
 
@@ -80,7 +113,7 @@ class Atlas {
     print("Tamanho do Vetor de caminhos: ${caminhos.length}");
 
     caminhos.asMap().forEach((index, caminho) {
-      if (Random.secure().nextInt(100) < 100 && caminho.pergunta == null && index > 2) { // 40% chance of adding a question
+      if (Random.secure().nextInt(100) < 20 && caminho.pergunta == null && index > 2) { // 40% chance of adding a question
         caminho.pergunta = Pergunta(pergunta: 'Pergunta aleatória', solucao: 'Resposta aleatória',
             alternativas: ['Alternativa 1', 'Alternativa 2', 'Alternativa 3', 'Alternativa 4'], indexSolucao: 1,
         dificuldade: Dificuldade.values[Random.secure().nextInt(Dificuldade.values.length)]);
