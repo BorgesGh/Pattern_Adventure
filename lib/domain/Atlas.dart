@@ -94,20 +94,23 @@ class Atlas {
           MapTile(position: Vector2(19 * MapTile.tileSize, 9 * MapTile.tileSize)),
           MapTile(position: Vector2(20 * MapTile.tileSize, 9 * MapTile.tileSize)),
           MapTile(position: Vector2(21 * MapTile.tileSize, 9 * MapTile.tileSize)),
+          MapTile(position: Vector2(22 * MapTile.tileSize, 9 * MapTile.tileSize)),
 
 // De (21, 9) até (21, 14)
-          MapTile(position: Vector2(21 * MapTile.tileSize, 10 * MapTile.tileSize)),
-          MapTile(position: Vector2(21 * MapTile.tileSize, 11 * MapTile.tileSize)),
-          MapTile(position: Vector2(21 * MapTile.tileSize, 12 * MapTile.tileSize)),
-          MapTile(position: Vector2(21 * MapTile.tileSize, 13 * MapTile.tileSize)),
-          MapTile(position: Vector2(21 * MapTile.tileSize, 14 * MapTile.tileSize)),
+          MapTile(position: Vector2(22 * MapTile.tileSize, 10 * MapTile.tileSize)),
+          MapTile(position: Vector2(22 * MapTile.tileSize, 11 * MapTile.tileSize)),
+          MapTile(position: Vector2(22 * MapTile.tileSize, 12 * MapTile.tileSize)),
+          MapTile(position: Vector2(22 * MapTile.tileSize, 13 * MapTile.tileSize)),
+          MapTile(position: Vector2(22 * MapTile.tileSize, 14 * MapTile.tileSize)),
 
         ],
       )
     ];
   }
 
-  void gerarAreasDePergunta() {
+  Future<void> gerarAreasDePergunta() async{
+    indiceDePerguntas.clear(); // Limpa a lista de índices de perguntas
+
     var caminhos = atual.caminhoPrincipal;
 
     print("Tamanho do Vetor de caminhos: ${caminhos.length}");

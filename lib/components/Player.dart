@@ -121,6 +121,7 @@ class Jogador extends SimplePlayer with PathFinding {
     }
 
     print("Caminho finalizado!");
+    MapNavigator.of(context).toNamed('/mapa-agua'); // Muda para o próximo mapa após completar o caminho
   }
 
   // @override

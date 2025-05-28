@@ -13,16 +13,14 @@ class GameController extends GameComponent{
   var pontuacao = 0;
 
 
-  @override
-  void onMount() {
-    print(gameRef.map);
+  Future<void> gerarPerguntas(BonfireGameInterface newRef) async {
+    // print(gameRef.map);
 
-    atlas.gerarAreasDePergunta(); // Randomizar onde terá perguntas no mapa
+    await atlas.gerarAreasDePergunta(); // Randomizar onde terá perguntas no mapa
 
     for (var element in atlas.atual.caminhoPrincipal) {
       if(element.pergunta != null) {
-        // gameRef.add(Dialogpergunta(pergunta: element.pergunta!));
-        gameRef.map.add(
+        newRef.map.add(
           LocalDePergunta(
             dificuldade: element.pergunta!.dificuldade,
             posicao: element.position,
@@ -30,7 +28,6 @@ class GameController extends GameComponent{
         );
       }
     }
-    super.onMount();
   }
 
   Vector2 getPosicaoInicial(){
