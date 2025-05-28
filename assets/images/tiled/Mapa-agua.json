@@ -290,7 +290,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"Slates v.2 [32x32px orthogonal tileset by Ivan Voirol].tsx"
+         "source":"Slates.json"
         }],
  "tilewidth":32,
  "type":"map",
