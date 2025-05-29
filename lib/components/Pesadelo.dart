@@ -5,6 +5,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/npc/enemy/simple_enemy.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../domain/MapTile.dart';
 import '../utils/CharacterSpriteSheet.dart';
@@ -41,7 +42,19 @@ class Pesadelo extends SimpleEnemy with PathFinding, BlockMovementCollision {
 
     seeAndMoveToPlayer( // Fazer o Pesadelo correr atrás do jogado e quando tocar nele, executar algo
       closePlayer: (player) {
-        print("Peguei");
+
+        TalkDialog.show(gameRef.context, [
+          Say(
+            person: pesadeloFace,
+            personSayDirection: PersonSayDirection.RIGHT,
+            text: [
+              const TextSpan(
+                text: "Peguei!\n",
+                style: TextStyle(color: Colors.white, fontSize: 30),
+              ),
+            ],
+          )]
+        );
       },
       radiusVision: MapTile.tileSize * 10,
     );
