@@ -4,11 +4,12 @@ import 'package:bonfire/widgets/bonfire_widget.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:jogo_tabuleiro/components/GameController.dart';
-import 'package:jogo_tabuleiro/components/HudDoJogador.dart';
-import 'package:jogo_tabuleiro/components/Player.dart';
+import 'package:jogo_tabuleiro/components/Pesadelo.dart';
+import 'package:jogo_tabuleiro/components/jogador/HudDoJogador.dart';
+import 'package:jogo_tabuleiro/components/jogador/Player.dart';
 import 'package:jogo_tabuleiro/domain/Atlas.dart';
 import 'components/LocalDePergunta.dart';
-import 'components/StatusDoJogador.dart';
+import 'components/jogador/StatusDoJogador.dart';
 import 'domain/MapTile.dart';
 import 'domain/Mapa.dart';
 
@@ -73,6 +74,9 @@ class _BoardGameState extends State<BoardGame> {
               statusDoJogador: status,
               estado: map.id == 'map1' ? PlayerState.intro : PlayerState.playing,
           ),
+          components: [
+            Pesadelo(position: map.properties['caminhoPrincipal'][10].position),
+          ],
           playerControllers: [
             //https://opengameart.org/content/joystick-pack-virtual-joystick-ui
             //Joystick art font
@@ -111,7 +115,7 @@ class _BoardGameState extends State<BoardGame> {
             print("Mapa Atual: $mapaAtual");
           },
 
-          hudComponents: [HudDoJogador(status)],
+          // hudComponents: [HudDoJogador(status)],
 
         );
       }

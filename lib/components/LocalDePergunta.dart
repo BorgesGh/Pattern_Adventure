@@ -8,7 +8,7 @@ import 'package:jogo_tabuleiro/domain/Pergunta.dart';
 
 import '../domain/MapTile.dart';
 
-class LocalDePergunta extends SpriteComponent {
+class LocalDePergunta extends SpriteComponent  {
 
   Dificuldade dificuldade;
   Vector2 posicao;

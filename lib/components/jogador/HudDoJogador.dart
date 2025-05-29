@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
-import '../domain/MapTile.dart';
+import '../../domain/MapTile.dart';
 import 'StatusDoJogador.dart';
 
 class HudDoJogador extends GameComponent {

@@ -4,13 +4,13 @@ import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/player/player.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
-import 'package:jogo_tabuleiro/components/HudDoJogador.dart';
+import 'package:jogo_tabuleiro/components/jogador/HudDoJogador.dart';
 import 'package:jogo_tabuleiro/domain/MapTile.dart';
 
-import '../domain/Mapa.dart';
-import '../game.dart';
-import '../utils/CharacterSpriteSheet.dart';
-import '../widgets/DialogPergunta.dart';
+import '../../domain/Mapa.dart';
+import '../../game.dart';
+import '../../utils/CharacterSpriteSheet.dart';
+import '../../widgets/DialogPergunta.dart';
 import 'StatusDoJogador.dart';
 
 enum PlayerState {
