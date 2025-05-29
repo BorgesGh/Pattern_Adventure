@@ -57,6 +57,7 @@ class _BoardGameState extends State<BoardGame> {
       builder: (context, arguments, map) {
 
         return BonfireWidget(
+          showCollisionArea: true,
           map: map.map,
           cameraConfig: CameraConfig(
               moveOnlyMapArea: true, // true
@@ -69,8 +70,30 @@ class _BoardGameState extends State<BoardGame> {
               size: Jogador.JogadorSize,
               mapa:  map.properties['mapa'],
               indexDePerguntas: controller.atlas.indiceDePerguntas,
-              statusDoJogador: status
+              statusDoJogador: status,
+              estado: map.id == 'map1' ? PlayerState.intro : PlayerState.playing,
           ),
+          playerControllers: [
+            //https://opengameart.org/content/joystick-pack-virtual-joystick-ui
+            //Joystick art font
+            Joystick(
+              directional: JoystickDirectional(
+                spriteBackgroundDirectional: Sprite.load('joystick_background.png'),
+                spriteKnobDirectional: Sprite.load('joystick_knob.png'),
+                size: 100,
+                margin: EdgeInsets.only(left: MediaQuery.of(context).padding.left + 20, bottom: MediaQuery.of(context).padding.bottom + 20),
+              ),
+              actions: [
+                JoystickAction(
+                  actionId: 'action',
+                  sprite: Sprite.load('joystick_knob.png'),
+                  spritePressed: Sprite.load('joystick_action_pressed.png'),
+                  size: 50,
+                  margin: const EdgeInsets.only(right: 20, bottom: 20),
+                ),
+              ],
+            ),
+          ],
 
           onReady: (BonfireGameInterface gameRef) async {
             print("O Jogo está pronto!");
