@@ -90,4 +90,8 @@ class CharacterSpriteSheet{
   static Image getRostoTriste() {
     return Image.asset('assets/images/character/player-triste.png',height: 100);
   }
+
+  static Image getRostoPesadelo(){
+    return Image.asset('assets/images/character/pesadelo-face.png',height: 100);
+  }
 }
