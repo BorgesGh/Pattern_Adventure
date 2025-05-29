@@ -8,42 +8,56 @@ import 'package:jogo_tabuleiro/domain/Pergunta.dart';
 
 import '../domain/MapTile.dart';
 
-class LocalDePergunta extends SpriteComponent  {
+class LocalDePergunta extends GameComponent with Sensor<Player> {
+  final Dificuldade dificuldade;
+  final Vector2 posicao;
+  late SpriteComponent _spriteComponent;
 
-  Dificuldade dificuldade;
-  Vector2 posicao;
-
-  LocalDePergunta({required this.dificuldade, required this.posicao}) : super(
-    priority: 1000,
-    anchor: Anchor.center,
-    position: posicao,
-    size: Vector2.all(MapTile.tileSize),
-  );
-
+  LocalDePergunta({
+    required this.dificuldade,
+    required this.posicao,
+  }) {
+    priority = 1000;
+    anchor = Anchor.center;
+    position = posicao;
+    size = Vector2.all(MapTile.tileSize);
+  }
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load('Molde Pergunta.png', srcSize: Vector2.all(MapTile.tileSize));
+    final sprite = await Sprite.load(
+      'Molde Pergunta.png',
+      srcSize: Vector2.all(MapTile.tileSize),
+    );
+
+    _spriteComponent = SpriteComponent(
+      sprite: sprite,
+      size: size,
+      position: Vector2.zero(),
+      anchor: Anchor.topLeft,
+    );
+
+    add(_spriteComponent); // Adiciona corretamente ao corpo do GameComponent
+
     return super.onLoad();
   }
 
   @override
-  void onMount() {
-    // debugMode = true;
-    super.onMount();
-  }
-
-  @override
   void render(Canvas canvas) {
-    // Desenha o círculo de fundo antes do sprite (fica por trás)
+    // Fundo colorido de acordo com a dificuldade
     canvas.drawCircle(
-      (size / 2).toOffset(), // Centro relativo do componente
-      MapTile.tileSize / 2,
+      (size / 2).toOffset(),
+      size.x / 2,
       Paint()..color = _cor.withOpacity(0.5),
     );
 
-    // Chama o render padrão do SpriteComponent (desenha o sprite)
     super.render(canvas);
+  }
+
+  @override
+  void onContact(Player component) {
+    // Ação quando o jogador entra no local
+    debugPrint("Jogador entrou em uma pergunta de dificuldade ${dificuldade.name}");
   }
 
   Color get _cor {
@@ -56,5 +70,4 @@ class LocalDePergunta extends SpriteComponent  {
         return Colors.red;
     }
   }
-
 }
