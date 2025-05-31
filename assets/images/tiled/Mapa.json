@@ -127,6 +127,45 @@
          "y":0
         }, 
         {
+         "draworder":"topdown",
+         "id":11,
+         "name":"hitbox",
+         "objects":[
+                {
+                 "height":0,
+                 "id":16,
+                 "name":"",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":2,
+                         "y":91
+                        }, 
+                        {
+                         "x":15,
+                         "y":90
+                        }, 
+                        {
+                         "x":11,
+                         "y":4
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":-3,
+                 "y":352
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -250,8 +289,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":11,
- "nextobjectid":16,
+ "nextlayerid":12,
+ "nextobjectid":17,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

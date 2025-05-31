@@ -54,6 +54,11 @@
    </object>
   </objectgroup>
  </tile>
+ <tile id="299">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0.333333" y="0.333333" width="32" height="32"/>
+  </objectgroup>
+ </tile>
  <tile id="1173">
   <objectgroup draworder="index" id="2">
    <object id="1" x="30.7273" y="-0.0909091">
