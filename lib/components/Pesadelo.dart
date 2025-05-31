@@ -10,9 +10,10 @@ import 'package:flutter/material.dart';
 import '../domain/MapTile.dart';
 import '../utils/CharacterSpriteSheet.dart';
 
-class Pesadelo extends SimpleEnemy with PathFinding, BlockMovementCollision {
+class Pesadelo extends SimpleEnemy with PathFinding {
 
   late Image pesadeloFace;
+  bool entrouEmContatoComOPlayer = false;
 
   Pesadelo({required super.position}) :super(
     size: Vector2.all(MapTile.tileSize),
@@ -40,24 +41,51 @@ class Pesadelo extends SimpleEnemy with PathFinding, BlockMovementCollision {
   void update(double dt) {
     super.update(dt);
 
-    seeAndMoveToPlayer( // Fazer o Pesadelo correr atrás do jogado e quando tocar nele, executar algo
-      closePlayer: (player) {
+    if (!entrouEmContatoComOPlayer) {
+      moveToPosition(gameRef.player!.position);
+      seeAndMoveToPlayer(
+        visionAngle: 80,
+        runOnlyVisibleInScreen: false,
+        closePlayer: (player) {
+          entrouEmContatoComOPlayer = true; // Marca que já falou
 
-        TalkDialog.show(gameRef.context, [
-          Say(
-            person: pesadeloFace,
-            personSayDirection: PersonSayDirection.RIGHT,
-            text: [
-              const TextSpan(
-                text: "Peguei!\n",
-                style: TextStyle(color: Colors.white, fontSize: 30),
+          TalkDialog.show(
+            gameRef.context,
+            [
+              Say(
+                person: pesadeloFace,
+                personSayDirection: PersonSayDirection.RIGHT,
+                text: [
+                  const TextSpan(
+                    text: "Peguei!\n",
+                    style: TextStyle(color: Colors.white, fontSize: 30),
+                  ),
+                ],
               ),
             ],
-          )]
-        );
-      },
-      radiusVision: MapTile.tileSize * 10,
-    );
+          );
+        },
+        radiusVision: MapTile.tileSize * 30,
+      );
+
+      return;
+    }
+
+
+
+
+    // seeAndMoveToPlayer(// Fazer o Pesadelo correr atrás do jogado e quando tocar nele, executar algo
+    //   visionAngle: 80,
+    //   runOnlyVisibleInScreen: false,
+    //
+    //
+    //   closePlayer: (player) {
+    //     if(entrouEmContatoComOPlayer) return;
+    //     entrouEmContatoComOPlayer = true;
+    //
+    //   },
+    //   radiusVision: MapTile.tileSize * 30,
+    // );
   }
 
 }
