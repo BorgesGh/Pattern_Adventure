@@ -21,14 +21,16 @@ class BoardGame extends StatefulWidget {
 }
 
 class _BoardGameState extends State<BoardGame> {
-  final GameController controller = GameController();
-
   final StatusDoJogador status = StatusDoJogador();
+
+  final GameController controller = GameController();
 
   int mapaAtual = 0;
 
   @override
   Widget build(BuildContext context) {
+
+    controller.status = status;
 
     // controller.atlas.atual = controller.getMapaPorIndice(mapaAtual);
     return MapNavigator( // O map navigator vai dar a possíbilidade de navegar entre mapas.
@@ -115,7 +117,7 @@ class _BoardGameState extends State<BoardGame> {
             print("Mapa Atual: $mapaAtual");
           },
 
-          // hudComponents: [HudDoJogador(status)],
+          hudComponents: [HudDoJogador(status)],
 
         );
       }
