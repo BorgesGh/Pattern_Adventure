@@ -22,7 +22,7 @@ class HudDoJogador extends GameComponent {
     );
 
     tp.render(canvas, 'Vidas: ${status.vidas}', Vector2(1 * MapTile.tileSize, 6 * MapTile.tileSize));
-    tp.render(canvas, 'Pontos: ${status.pontuacao}',Vector2(1 * MapTile.tileSize, 5 * MapTile.tileSize));
+    tp.render(canvas, 'Perguntas: ${status.perguntasAcertadas}/ ${status.perguntasTotais}',Vector2(1 * MapTile.tileSize, 5 * MapTile.tileSize));
 
     super.render(canvas);
   }

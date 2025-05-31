@@ -6,6 +6,7 @@ import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 import 'package:jogo_tabuleiro/components/jogador/HudDoJogador.dart';
 import 'package:jogo_tabuleiro/domain/MapTile.dart';
+import 'package:jogo_tabuleiro/widgets/BalaoDica.dart';
 
 import '../../domain/Mapa.dart';
 import '../../game.dart';
@@ -65,87 +66,31 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision {
   @override
   Future<void> onMount() async {
     // debugMode = true;
-    //
-    // if(estado == PlayerState.intro){
-    //   final completerDialogoIntro = Completer<void>();
-    //
-    //   _intro(completerDialogoIntro);
-    //
-    //   await completerDialogoIntro.future;
-    // }
 
-    //
-    // Future.delayed(const Duration(seconds: 1), () {
-    //   if (caminho.isNotEmpty) {
-    //     _seguirCaminhoDefinido(caminho, indexDePerguntas);
-    //   }
-    // });
+    if(estado == PlayerState.intro){
+      final completerDialogoIntro = Completer<void>();
+
+      _intro(completerDialogoIntro);
+
+      await completerDialogoIntro.future;
+
+      (const Balaodica(text: "Pão"));
+    }
+
+    statusDoJogador.addListener(() {
+      if (!statusDoJogador.estaVivo) {
+        estado = PlayerState.death;
+        print("O jogador morreu!");
+        // Adicione lógica adicional aqui, como exibir uma tela de fim de jogo.
+      }
+      else if(statusDoJogador.respondeuTodasPerguntas){
+        MapNavigator.of(context).toNamed('/mapa-agua');
+        statusDoJogador.resetarStatus();
+      }
+    });
 
     super.onMount();
   }
-
-  // Future<void> _seguirCaminhoDefinido(
-  //     List<MapTile> caminho,
-  //     List<int> indicesDeParada,
-  //     ) async {
-  //   const double velocidade = 50; // pixels por segundo
-  //   const double intervalo = 0.016; // segundos (aprox. 60 FPS)
-  //
-  //   for (int i = 0; i < caminho.length; i++) {
-  //     final destino = Vector2(caminho[i].position.x - MapTile.tileSize / 2, caminho[i].position.y - MapTile.tileSize / 2) ;
-  //     final pergunta = caminho[i].pergunta;
-  //
-  //
-  //     while ((position - destino).length > 1.0) {
-  //       final direcao = (destino - position).normalized();
-  //
-  //       position += direcao * velocidade * intervalo;
-  //
-  //       await Future.delayed(
-  //         Duration(milliseconds: (intervalo * 1000).toInt()),
-  //       );
-  //     }
-  //
-  //     // Corrige a posição final para evitar erros de aproximação
-  //     position = destino;
-  //
-  //     if (indicesDeParada.contains(i)) {
-  //       print("Parado no ponto de pergunta ${i} em $destino");
-  //
-  //       // Espera a resposta da pergunta antes de continuar
-  //       final completer = Completer<void>();
-  //
-  //       await showDialog(
-  //         context: gameRef.context, // <- você precisa ter acesso a esse contexto!
-  //         barrierDismissible: false,
-  //         builder: (context) {
-  //           return DialogPergunta(
-  //             pergunta: pergunta!, // <- instância da classe Pergunta
-  //             texturaBotao: 'assets/images/back-madeira.jpg',
-  //             texturaDialog: 'backgrounds/caixa_dialogo_madeira.png',
-  //             onRespondido: (bool acertou) {
-  //               // Você pode lidar com o resultado aqui
-  //               if (acertou) {
-  //                 statusDoJogador.acertouPergunta();
-  //               } else {
-  //                 statusDoJogador.errouPergunta();
-  //               }
-  //                completer.complete();
-  //             },
-  //           );
-  //         },
-  //       );
-  //
-  //       await completer.future; // Espera até o jogador responder
-  //     }
-  //
-  //     // Pequena pausa opcional entre os movimentos
-  //     // await Future.delayed(const Duration(milliseconds: 300));
-  //   }
-  //
-  //   print("Caminho finalizado!");
-  //   MapNavigator.of(context).toNamed('/mapa-agua'); // Muda para o próximo mapa após completar o caminho
-  // }
 
   void _intro(Completer completerTalk) {
     TalkDialog.show(gameRef.context, [
@@ -197,11 +142,5 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision {
       completerTalk.complete();
     });
 
-  }
-
-  @override
-  void onJoystickAction(JoystickActionEvent event) {
-    // if(event.id == )
-    super.onJoystickAction(event);
   }
 }
