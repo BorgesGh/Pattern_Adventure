@@ -21,7 +21,6 @@ enum PlayerState {
 }
 
 class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision {
-  static var JogadorSize = Vector2.all(MapTile.tileSize);
 
   Mapa mapa;
   List<int> indexDePerguntas = [];
@@ -34,7 +33,6 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision {
 
   Jogador({
     required Vector2 position,
-    required super.size,
     required this.mapa,
     required this.indexDePerguntas,
     required this.statusDoJogador,
@@ -43,6 +41,7 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision {
     animation: CharacterSpriteSheet(fileName: 'player.png').getAnimation(),
     speed: 40,
     position: Vector2(position.x - MapTile.tileSize / 2, position.y - MapTile.tileSize / 2),
+    size: Vector2.all(MapTile.tileSize),
   ) {
     caminho = mapa.caminhoPrincipal; // atribui o caminho do mapa ao jogador
 
@@ -55,8 +54,8 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision {
     rostoTriste = CharacterSpriteSheet.getRostoTriste();
 
     add(RectangleHitbox(
-      size: JogadorSize,
-      position: Vector2(0, 0),
+      size: Vector2.all(MapTile.tileSize - 8),
+      position: Vector2.all(MapTile.tileSize / 4),
     ));
 
 
@@ -67,15 +66,14 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision {
   Future<void> onMount() async {
     // debugMode = true;
 
-    if(estado == PlayerState.intro){
-      final completerDialogoIntro = Completer<void>();
-
-      _intro(completerDialogoIntro);
-
-      await completerDialogoIntro.future;
-
-      (const Balaodica(text: "Pão"));
-    }
+    // if(estado == PlayerState.intro){
+    //   final completerDialogoIntro = Completer<void>();
+    //
+    //   _intro(completerDialogoIntro);
+    //
+    //   await completerDialogoIntro.future;
+    //
+    // }
 
     statusDoJogador.addListener(() {
       if (!statusDoJogador.estaVivo) {
