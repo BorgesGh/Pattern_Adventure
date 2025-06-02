@@ -70,7 +70,6 @@ class _BoardGameState extends State<BoardGame> {
 
           player: Jogador(
               position: map.properties['caminhoPrincipal'][0].position,
-              size: Jogador.JogadorSize,
               mapa:  map.properties['mapa'],
               indexDePerguntas: controller.atlas.indiceDePerguntas,
               statusDoJogador: status,
@@ -89,15 +88,6 @@ class _BoardGameState extends State<BoardGame> {
                 size: 100,
                 margin: EdgeInsets.only(left: MediaQuery.of(context).padding.left + 20, bottom: MediaQuery.of(context).padding.bottom + 20),
               ),
-              actions: [
-                JoystickAction(
-                  actionId: 'action',
-                  sprite: Sprite.load('joystick_knob.png'),
-                  spritePressed: Sprite.load('joystick_action_pressed.png'),
-                  size: 50,
-                  margin: const EdgeInsets.only(right: 20, bottom: 20),
-                ),
-              ],
             ),
           ],
 
