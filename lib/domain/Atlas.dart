@@ -5,6 +5,8 @@ import 'package:jogo_tabuleiro/domain/MapTile.dart';
 import 'package:jogo_tabuleiro/domain/Mapa.dart';
 import 'package:jogo_tabuleiro/domain/Pergunta.dart';
 import 'package:jogo_tabuleiro/game.dart';
+import 'package:jogo_tabuleiro/repository/DbHelper.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Atlas {
   static final Atlas _instancia = Atlas._interno();
@@ -107,22 +109,35 @@ class Atlas {
     ];
   }
 
-  Future<void> gerarAreasDePergunta() async{
-    indiceDePerguntas.clear(); // Limpa a lista de índices de perguntas
+  Future<void> gerarAreasDePergunta() async {
+    final db = DbHelper();
+
+    indiceDePerguntas.clear();
 
     var caminhos = atual.caminhoPrincipal;
 
+    // Busca todas as perguntas do banco
+    final todasPerguntas = await db.buscarPerguntas();
+
+    // Embaralha a lista para obter perguntas aleatórias
+    todasPerguntas.shuffle();
+
     print("Tamanho do Vetor de caminhos: ${caminhos.length}");
 
+    // Índice para acessar perguntas aleatórias da lista
+    int perguntaIndex = 0;
+
     caminhos.asMap().forEach((index, caminho) {
-      if (Random.secure().nextInt(100) < 20 && caminho.pergunta == null && index > 2) { // 40% chance of adding a question
-        caminho.pergunta = Pergunta(pergunta: 'Pergunta aleatória', solucao: 'Resposta aleatória',
-            alternativas: ['Alternativa 1', 'Alternativa 2', 'Alternativa 3', 'Alternativa 4'], indexSolucao: 1,
-        dificuldade: Dificuldade.values[Random.secure().nextInt(Dificuldade.values.length)]);
-        indiceDePerguntas.add(index); // Add the index to the list
+      final bool podeInserir = Random.secure().nextInt(100) < 20 && caminho.pergunta == null && index > 2;
+
+      if (podeInserir && perguntaIndex < todasPerguntas.length) {
+        caminho.pergunta = todasPerguntas[perguntaIndex];
+        indiceDePerguntas.add(index);
+        perguntaIndex++; // Avança para a próxima pergunta
       } else {
         caminho.pergunta = null;
       }
     });
   }
+
 }
