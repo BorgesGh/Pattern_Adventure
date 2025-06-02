@@ -66,6 +66,10 @@ class LocalDePergunta extends GameComponent with Sensor<Player> {
   Future<void> onContact(Player component) async {
     // Ação quando o jogador entra no local
 
+    if(component is! MeuPlayer.Jogador) {
+      return; // Se não for o jogador, não faz nada
+    }
+
     if (perguntaAberta) {
       return; // Se a pergunta já está aberta, não faz nada
     }
