@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/player/player.dart';
 import 'package:flame/events.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:jogo_tabuleiro/components/GameStateManager.dart';
 import 'package:jogo_tabuleiro/components/jogador/HudDoJogador.dart';
 import 'package:jogo_tabuleiro/domain/MapTile.dart';
 import 'package:jogo_tabuleiro/widgets/BalaoDica.dart';
@@ -14,19 +16,20 @@ import '../../utils/CharacterSpriteSheet.dart';
 import '../../widgets/DialogPergunta.dart';
 import 'StatusDoJogador.dart';
 
-enum PlayerState {
+enum GameState {
   intro,
   playing,
+  Pesadelo,
   death
 }
 
-class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision {
+class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lighting {
 
   Mapa mapa;
   List<int> indexDePerguntas = [];
   List<MapTile> caminho = [];
   StatusDoJogador statusDoJogador;
-  PlayerState estado;
+  GameStateManager estado;
   late Image rostoNeutro;
   late Image rostoFeliz;
   late Image rostoTriste;
@@ -42,9 +45,18 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision {
     speed: 40,
     position: Vector2(position.x - MapTile.tileSize / 2, position.y - MapTile.tileSize / 2),
     size: Vector2.all(MapTile.tileSize),
+
   ) {
     caminho = mapa.caminhoPrincipal; // atribui o caminho do mapa ao jogador
-
+    setupLighting(
+      LightingConfig(
+        radius: width * 1.5,
+        color: Colors.transparent,
+        // blurBorder: 20, // this is a default value
+        // type: LightingType.circle, // this is a default value
+        // useComponentAngle: false, // this is a default value. When true, light rotates together when a component changes its `angle` param.
+      ),
+    );
   }
 
   @override
@@ -66,18 +78,18 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision {
   Future<void> onMount() async {
     // debugMode = true;
 
-    // if(estado == PlayerState.intro){
-    //   final completerDialogoIntro = Completer<void>();
-    //
-    //   _intro(completerDialogoIntro);
-    //
-    //   await completerDialogoIntro.future;
-    //
-    // }
+    if(estado.value == GameState.intro){
+      final completerDialogoIntro = Completer<void>();
+
+      _intro(completerDialogoIntro);
+
+      await completerDialogoIntro.future;
+
+    }
 
     statusDoJogador.addListener(() {
       if (!statusDoJogador.estaVivo) {
-        estado = PlayerState.death;
+        estado.changeState(GameState.death);
         print("O jogador morreu!");
         // Adicione lógica adicional aqui, como exibir uma tela de fim de jogo.
       }
