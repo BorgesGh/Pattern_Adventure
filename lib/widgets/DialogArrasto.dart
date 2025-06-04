@@ -19,6 +19,8 @@ class DialogArrasto extends StatefulWidget {
 class _DialogArrastoState extends State<DialogArrasto> {
   final Map<int, int?> _alvos = {};
   final Map<int, bool> _ocupado = {};
+  bool _mostrarResultado = false;
+  bool _acertou = false;
 
   @override
   void initState() {
@@ -38,8 +40,15 @@ class _DialogArrastoState extends State<DialogArrasto> {
       }
     }
 
+    setState(() {
+      _mostrarResultado = true;
+      _acertou = acertou;
+    });
+  }
+
+  void _finalizarDialog() {
     Navigator.of(context).pop();
-    widget.onRespondido(acertou);
+    widget.onRespondido(_acertou);
   }
 
   void _mostrarImagemAmpliada(Widget imagem) {
@@ -94,20 +103,30 @@ class _DialogArrastoState extends State<DialogArrasto> {
           height: 100,
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueGrey, width: 2),
+            border: Border.all(
+              color: _mostrarResultado
+                  ? (_alvos[index] == widget.ordemCorreta[index]
+                  ? Colors.green
+                  : Colors.red)
+                  : Colors.blueGrey,
+              width: 2,
+            ),
             borderRadius: BorderRadius.circular(8),
             color: _alvos[index] != null ? Colors.grey.shade200 : Colors.white,
           ),
           child: _alvos[index] != null
               ? widget.imagens[_alvos[index]!]
+              : _mostrarResultado && !_acertou
+              ? widget.imagens[widget.ordemCorreta[index]]
               : const Center(child: Text("Arraste aqui")),
         );
       },
       onAccept: (data) {
+        if (_mostrarResultado) return;
+
         setState(() {
           if (_alvos.values.contains(data)) {
-            final oldKey =
-                _alvos.entries.firstWhere((e) => e.value == data).key;
+            final oldKey = _alvos.entries.firstWhere((e) => e.value == data).key;
             _alvos[oldKey] = null;
             _ocupado[data] = false;
           }
@@ -118,12 +137,90 @@ class _DialogArrastoState extends State<DialogArrasto> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final draggableItems =
-    List.generate(widget.imagens.length, _buildDraggable);
+  Widget _buildConteudoJogo() {
+    final draggableItems = List.generate(widget.imagens.length, _buildDraggable);
     final targets = List.generate(widget.imagens.length, _buildDragTarget);
 
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          'Arraste cada imagem para o local correto:',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 20),
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 12,
+          runSpacing: 12,
+          children: draggableItems,
+        ),
+        const SizedBox(height: 20),
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 12,
+          runSpacing: 12,
+          children: targets,
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: _alvos.values.any((element) => element == null) || _mostrarResultado
+              ? null
+              : _verificarResposta,
+          child: const Text("Verificar"),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildResultado() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          _acertou ? Icons.check_circle : Icons.error,
+          color: _acertou ? Colors.green : Colors.red,
+          size: 60,
+        ),
+        const SizedBox(height: 20),
+        Text(
+          _acertou ? 'Resposta Correta!' : 'Resposta Incorreta',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: _acertou ? Colors.green : Colors.red,
+          ),
+        ),
+        const SizedBox(height: 20),
+        if (!_acertou) ...[
+          const Text(
+            'A ordem correta seria:',
+            style: TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 12,
+            runSpacing: 12,
+            children: widget.ordemCorreta.map((index) => widget.imagens[index]).toList(),
+          ),
+          const SizedBox(height: 20),
+        ],
+        ElevatedButton(
+          onPressed: _finalizarDialog,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _acertou ? Colors.green : Colors.red,
+            foregroundColor: Colors.white,
+          ),
+          child: const Text('Continuar'),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxHeight = MediaQuery.of(context).size.height * 0.9;
@@ -138,37 +235,7 @@ class _DialogArrastoState extends State<DialogArrasto> {
             ),
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Arraste cada imagem para o local correto:',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: draggableItems,
-                  ),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: targets,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _alvos.values.any((element) => element == null)
-                        ? null
-                        : _verificarResposta,
-                    child: const Text("Verificar"),
-                  ),
-                ],
-              ),
+              child: _mostrarResultado ? _buildResultado() : _buildConteudoJogo(),
             ),
           ),
         );
