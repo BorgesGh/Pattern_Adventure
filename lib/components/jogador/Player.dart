@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:jogo_tabuleiro/components/GameStateManager.dart';
 import 'package:jogo_tabuleiro/components/jogador/HudDoJogador.dart';
 import 'package:jogo_tabuleiro/domain/MapTile.dart';
+import 'package:jogo_tabuleiro/utils/AssetsUrl.dart';
 import 'package:jogo_tabuleiro/widgets/BalaoDica.dart';
+import 'package:jogo_tabuleiro/widgets/DialogExplicativa.dart';
 
 import '../../domain/Mapa.dart';
 import '../../game.dart';
@@ -149,7 +151,15 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
           ),
         ],
       )]).then((_){
-      completerTalk.complete();
+      showDialog(
+          context: context,
+          builder: (BuildContext context) =>
+              Dialogexplicativa(
+                  explanation: "Suco de tomate é muito ruim!",
+                  imageUrl: AssetsUrl.joystick_background,
+                  onClose: (){
+                    completerTalk.complete();
+                  }));
     });
 
   }
