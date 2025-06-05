@@ -20,8 +20,7 @@ class Pesadelo extends SimpleEnemy with PathFinding {
   late Image pesadeloFace;
   bool entrouEmContatoComOPlayer = false;
   bool entrouNoJogo = false;
-  bool primeiraAparicao = true;
-
+  static bool primeiraAparicao = true; // Deixo como estático para que o valor seja guardado na classe, não no objeto
 
   List<MapTile> caminho = [];
   StatusDoJogador statusDoJogador;
@@ -62,6 +61,40 @@ class Pesadelo extends SimpleEnemy with PathFinding {
                 const TextSpan(
                   text: "Olá meu camarada!\n",
                   style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+              ],
+            ),
+            Say(
+              person: pesadeloFace,
+              personSayDirection: PersonSayDirection.RIGHT,
+              text: [
+                const TextSpan(
+                  text: "Pelo visto você não estudou né... Mas que pena.\n",
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+              ],
+            ),
+            Say(
+              person: pesadeloFace,
+              personSayDirection: PersonSayDirection.RIGHT,
+              text: [
+                const TextSpan(
+                  text: "Você não sabe de nada né?\n",
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                TextSpan(
+                  text: "Singleton, State, Decorator...\n",
+                  style: TextStyle(color: Colors.white, fontSize: 30,fontFamily: 'Courier New', fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Say(
+              person: pesadeloFace,
+              personSayDirection: PersonSayDirection.RIGHT,
+              text: [
+                const TextSpan(
+                  text: "Você irá se arrepender de não ter estudado!!\n",
+                  style: TextStyle(color: Colors.white, fontSize: 40),
                 ),
               ],
             ),
