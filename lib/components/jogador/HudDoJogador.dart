@@ -12,7 +12,15 @@ class HudDoJogador extends GameComponent {
 
   @override
   void render(Canvas canvas) {
-    //TODO fazer fundo da informaçãos ou posicionar de acorodo com a tela para ficar fixo.
+    super.render(canvas);
+
+    // Acesso ao tamanho da tela
+    final screenSize = gameRef.size;
+
+    // Margens em relação à borda da tela
+    const double marginLeft = 16;
+    const double marginTop = 16;
+
     TextPaint tp = TextPaint(
       style: const TextStyle(
         color: Colors.white,
@@ -21,9 +29,18 @@ class HudDoJogador extends GameComponent {
       ),
     );
 
-    tp.render(canvas, 'Vidas: ${status.vidas}', Vector2(1 * MapTile.tileSize, 6 * MapTile.tileSize));
-    tp.render(canvas, 'Perguntas: ${status.perguntasAcertadas}/ ${status.perguntasTotais}',Vector2(1 * MapTile.tileSize, 5 * MapTile.tileSize));
+    // Renderizar texto de vidas
+    tp.render(
+      canvas,
+      'Vidas: ${status.vidas}',
+      Vector2(marginLeft, marginTop),
+    );
 
-    super.render(canvas);
+    // Renderizar texto de perguntas
+    tp.render(
+      canvas,
+      'Perguntas: ${status.perguntasAcertadas}/${status.perguntasTotais}',
+      Vector2(marginLeft, marginTop + 30), // 30 pixels abaixo
+    );
   }
 }
