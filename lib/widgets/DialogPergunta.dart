@@ -111,6 +111,14 @@ class _DialogPerguntaState extends State<DialogPergunta>
     return Column(
       // mainAxisSize: MainAxisSize.min, // Removido para permitir que Expanded funcione corretamente
       children: [
+        Expanded(child:
+        widget.pergunta.headerImagem != null
+            ? Image.asset(
+          widget.pergunta.headerImagem!,
+          fit: BoxFit.cover,
+        )
+            : const SizedBox.shrink(),
+        ),
         Expanded(
           flex: 2, // Ajuste o flex para dar mais ou menos espaço para a pergunta
           child: SingleChildScrollView(
@@ -126,6 +134,7 @@ class _DialogPerguntaState extends State<DialogPergunta>
             ),
           ),
         ),
+
         const SizedBox(height: 12), // Espaçamento reduzido ligeiramente
         Expanded(
           flex: 3, // Ajuste o flex para dar mais ou menos espaço para as alternativas
