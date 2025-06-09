@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import '../domain/PerguntaArrasto.dart';
 
 class DialogArrasto extends StatefulWidget {
-  final List<Widget> imagens;
-  final List<int> ordemCorreta;
+  final PerguntaArrasto pergunta;
   final void Function(bool acertou) onRespondido;
 
   const DialogArrasto({
     super.key,
-    required this.imagens,
-    required this.ordemCorreta,
+    required this.pergunta,
     required this.onRespondido,
   });
 
@@ -18,23 +17,24 @@ class DialogArrasto extends StatefulWidget {
 
 class _DialogArrastoState extends State<DialogArrasto> {
   final Map<int, int?> _alvos = {};
-  final Map<int, bool> _ocupado = {};
+  final Map<int, bool> _imagemDisponivel = {};
   bool _mostrarResultado = false;
   bool _acertou = false;
+  int? _imagemExpandidaIndex;
 
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < widget.imagens.length; i++) {
+    for (int i = 0; i < widget.pergunta.caminhosImagens.length; i++) {
       _alvos[i] = null;
-      _ocupado[i] = false;
+      _imagemDisponivel[i] = true; // Todas as imagens começam disponíveis
     }
   }
 
   void _verificarResposta() {
     bool acertou = true;
-    for (int i = 0; i < widget.ordemCorreta.length; i++) {
-      if (_alvos[i] != widget.ordemCorreta[i]) {
+    for (int i = 0; i < widget.pergunta.ordemCorreta.length; i++) {
+      if (_alvos[i] != widget.pergunta.ordemCorreta[i]) {
         acertou = false;
         break;
       }
@@ -51,95 +51,136 @@ class _DialogArrastoState extends State<DialogArrasto> {
     widget.onRespondido(_acertou);
   }
 
-  void _mostrarImagemAmpliada(Widget imagem) {
-    showDialog(
-      context: context,
-      builder: (_) => Dialog(
-        insetPadding: const EdgeInsets.all(12),
-        backgroundColor: Colors.black,
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: InteractiveViewer(
-                child: Center(child: imagem),
-              ),
-            ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: IconButton(
-                icon: const Icon(Icons.close, color: Colors.white, size: 30),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  void _expandirImagem(int index) {
+    setState(() {
+      _imagemExpandidaIndex = index;
+    });
+  }
+
+  void _retrairImagem() {
+    setState(() {
+      _imagemExpandidaIndex = null;
+    });
   }
 
   Widget _buildDraggable(int index) {
-    final imagem = widget.imagens[index];
+    if (!_imagemDisponivel[index]!) {
+      return const SizedBox.shrink(); // Não mostra imagens já colocadas nos alvos
+    }
+
+    final imagePath = widget.pergunta.caminhosImagens[index];
 
     return GestureDetector(
-      onTap: () => _mostrarImagemAmpliada(imagem),
-      child: !_ocupado[index]!
-          ? Draggable<int>(
+      onTap: () => _expandirImagem(index),
+      child: Draggable<int>(
         data: index,
-        feedback: Opacity(opacity: 0.8, child: imagem),
+        feedback: Opacity(
+          opacity: 0.8,
+          child: Image.asset(imagePath, width: 100, height: 100),
+        ),
         childWhenDragging: const SizedBox.shrink(),
-        child: imagem,
-      )
-          : const SizedBox(width: 100, height: 100),
+        child: Image.asset(imagePath, width: 100, height: 100),
+      ),
     );
   }
 
   Widget _buildDragTarget(int index) {
     return DragTarget<int>(
       builder: (context, candidateData, rejectedData) {
-        return Container(
-          width: 100,
-          height: 100,
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: _mostrarResultado
-                  ? (_alvos[index] == widget.ordemCorreta[index]
-                  ? Colors.green
-                  : Colors.red)
-                  : Colors.blueGrey,
-              width: 2,
+        return GestureDetector(
+          onTap: _alvos[index] != null
+              ? () => _expandirImagem(_alvos[index]!)
+              : null,
+          child: Container(
+            width: 100,
+            height: 100,
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: _mostrarResultado
+                    ? (_alvos[index] == widget.pergunta.ordemCorreta[index]
+                    ? Colors.green
+                    : Colors.red)
+                    : Colors.blueGrey,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(8),
+              color: _alvos[index] != null ? Colors.grey.shade200 : Colors.white,
             ),
-            borderRadius: BorderRadius.circular(8),
-            color: _alvos[index] != null ? Colors.grey.shade200 : Colors.white,
+            child: _alvos[index] != null
+                ? Image.asset(
+              widget.pergunta.caminhosImagens[_alvos[index]!],
+              width: 100,
+              height: 100,
+            )
+                : _mostrarResultado && !_acertou
+                ? Image.asset(
+              widget.pergunta.caminhosImagens[widget.pergunta.ordemCorreta[index]],
+              width: 100,
+              height: 100,
+            )
+                : Center(
+              child: Text(
+                widget.pergunta.alternativas[widget.pergunta.ordemCorreta[index]],
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
-          child: _alvos[index] != null
-              ? widget.imagens[_alvos[index]!]
-              : _mostrarResultado && !_acertou
-              ? widget.imagens[widget.ordemCorreta[index]]
-              : const Center(child: Text("Arraste aqui")),
         );
       },
-      onAccept: (data) {
+      onAcceptWithDetails: (details) {
         if (_mostrarResultado) return;
 
         setState(() {
-          if (_alvos.values.contains(data)) {
-            final oldKey = _alvos.entries.firstWhere((e) => e.value == data).key;
-            _alvos[oldKey] = null;
-            _ocupado[data] = false;
+          // Remove a imagem do alvo anterior se ela estava em outro lugar
+          for (var entry in _alvos.entries) {
+            if (entry.value == details.data) {
+              _alvos[entry.key] = null;
+              _imagemDisponivel[details.data] = true;
+              break;
+            }
           }
-          _alvos[index] = data;
-          _ocupado[data] = true;
+
+          // Adiciona a imagem ao novo alvo
+          _alvos[index] = details.data;
+          _imagemDisponivel[details.data] = false;
         });
       },
     );
   }
 
+  Widget _buildImagemExpandida() {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.zero,
+      child: Stack(
+        children: [
+          InteractiveViewer(
+            panEnabled: true,
+            minScale: 0.5,
+            maxScale: 4.0,
+            child: Center(
+              child: Image.asset(
+                widget.pergunta.caminhosImagens[_imagemExpandidaIndex!],
+              ),
+            ),
+          ),
+          Positioned(
+            top: 20,
+            right: 20,
+            child: IconButton(
+              icon: const Icon(Icons.close, color: Colors.white, size: 30),
+              onPressed: _retrairImagem,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildConteudoJogo() {
-    final draggableItems = List.generate(widget.imagens.length, _buildDraggable);
-    final targets = List.generate(widget.imagens.length, _buildDragTarget);
+    final draggableItems = List.generate(widget.pergunta.caminhosImagens.length, _buildDraggable);
+    final targets = List.generate(widget.pergunta.caminhosImagens.length, _buildDragTarget);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -203,7 +244,16 @@ class _DialogArrastoState extends State<DialogArrasto> {
             alignment: WrapAlignment.center,
             spacing: 12,
             runSpacing: 12,
-            children: widget.ordemCorreta.map((index) => widget.imagens[index]).toList(),
+            children: widget.pergunta.ordemCorreta
+                .map((index) => GestureDetector(
+              onTap: () => _expandirImagem(index),
+              child: Image.asset(
+                widget.pergunta.caminhosImagens[index],
+                width: 100,
+                height: 100,
+              ),
+            ))
+                .toList(),
           ),
           const SizedBox(height: 20),
         ],
@@ -221,6 +271,10 @@ class _DialogArrastoState extends State<DialogArrasto> {
 
   @override
   Widget build(BuildContext context) {
+    if (_imagemExpandidaIndex != null) {
+      return _buildImagemExpandida();
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxHeight = MediaQuery.of(context).size.height * 0.9;
