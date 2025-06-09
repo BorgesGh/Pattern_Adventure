@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:jogo_tabuleiro/components/GameStateManager.dart';
 import 'package:jogo_tabuleiro/components/jogador/Player.dart';
 import 'package:jogo_tabuleiro/components/jogador/StatusDoJogador.dart';
+import 'package:jogo_tabuleiro/repository/DbHelper.dart';
+import 'package:jogo_tabuleiro/utils/AssetsUrl.dart';
+import 'package:jogo_tabuleiro/widgets/DialogExplicativa.dart';
 
 import '../domain/MapTile.dart';
 import '../utils/CharacterSpriteSheet.dart';
@@ -82,7 +85,7 @@ class Pesadelo extends SimpleEnemy with PathFinding {
                   text: "Você não sabe de nada né?\n",
                   style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: "Singleton, State, Decorator...\n",
                   style: TextStyle(color: Colors.white, fontSize: 30,fontFamily: 'Courier New', fontWeight: FontWeight.bold),
                 ),
@@ -100,14 +103,43 @@ class Pesadelo extends SimpleEnemy with PathFinding {
             ),
             // ... restante dos diálogos
           ],
+        ).then((_) {
+          showDialog(context: context,
+              builder: (_) {
+                return Dialogexplicativa(
+                  imageUrl: AssetsUrl.explicacao_2,
+                  explanation: RichText(
+                      text: const TextSpan(
+                        style: TextStyle(fontSize: 20, color: Colors.black),
+                          children: [
+                            TextSpan(
+                                text: 'Esse é o Pesadelo, ele é a própria encarnação das aulas de padrões de projeto que você não prestou atenção.\n'
+                                    'Ele vai te perseguir e se te pegar, irá fazer você responder uma pergunta com ',
+                            ),
+                            TextSpan(
+                                text: 'Análise de diagramas de classe.\n',
+                                style:  TextStyle(fontSize: 20, color: Colors.cyan)
+                            ),
+                            TextSpan(
+                                text: 'Tome muito cuidado com ele...',
+                            )
+                          ]
+                      )),
+                  onClose: (){
+
+                  },
+                );
+              });
+          }
         );
       });
+
       primeiraAparicao = false;
     }
 
     if(estadoDoJogo.value == GameState.Pesadelo && !entrouNoJogo) {
       gameRef.lighting!.color = Colors.black.withOpacity(0.9); // Deixa o jogo de noite
-      position = caminho[1].position; // Reseta a posição do Pesadelo
+      position = Vector2(gameRef.player!.position.x + (3 * MapTile.tileSize) ,gameRef.player!.position.y); // Reseta a posição do Pesadelo
       entrouNoJogo = true; // Marca que já entrou no jogo
     }
 
@@ -116,19 +148,16 @@ class Pesadelo extends SimpleEnemy with PathFinding {
       seeAndMoveToPlayer(
         visionAngle: 80,
         runOnlyVisibleInScreen: false,
-        closePlayer: (player) {
+        closePlayer: (player) async {
+          final perguntaArrasto = await DbHelper().buscarPerguntaAleatoria();
           entrouEmContatoComOPlayer = true; // Marca que já falou
 
           showDialog(
             context: context,
             barrierDismissible: false,
             builder: (_) => DialogArrasto(
-              imagens: [
-                Image.asset('assets/images/character/player-feliz.png', width: 80, height: 80),
-                Image.asset('assets/images/character/player-triste.png', width: 80, height: 80),
-                Image.asset('assets/images/character/player-neutro.png', width: 80, height: 80),
-              ],
-              ordemCorreta: const [2, 0, 1], // Índices corretos para cada posição
+
+              pergunta: perguntaArrasto!,
               onRespondido: (acertou) {
                 // Mostra feedback
                 statusDoJogador.perguntaPesadelo(acertou);
