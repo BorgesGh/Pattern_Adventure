@@ -75,7 +75,7 @@ class Atlas {
       ),
       Mapa(
         caminhoDoArquivo: 'tiled/Mapa-agua.json',
-        nomeMapa: "Praia projetista",
+        nomeMapa: "Mapa-Agua",
         caminhoPrincipal: [
           // De (4, 9) até (21, 9)
           MapTile(position: Vector2(4 * MapTile.tileSize, 9.5 * MapTile.tileSize)),
@@ -119,6 +119,7 @@ class Atlas {
     // Busca todas as perguntas do banco
     final todasPerguntas = await db.buscarPerguntas();
 
+
     // Embaralha a lista para obter perguntas aleatórias
     todasPerguntas.shuffle();
 
@@ -138,6 +139,11 @@ class Atlas {
         caminho.pergunta = null;
       }
     });
+  }
+
+  String getProximoMapa(){
+    var mapa = mapas[(mapas.indexOf(atual) + 1) % mapas.length];
+    return mapa.caminhoDoArquivo.split('/').last; // Corta apenas para o nome do mapa
   }
 
 }
