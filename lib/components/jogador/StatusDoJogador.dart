@@ -40,6 +40,9 @@ class StatusDoJogador extends ChangeNotifier {
       _pontuacao += 100;
     } else {
       _vidas -= 1;
+      if(estaVivo){
+        estadoDoJogo.changeState(GameState.GameOver); // Muda o estado do jogo para GameOver
+      }
     }
     _perguntasRespondidas++;
     if(_perguntasRespondidas >= _perguntasTotais / 2) {
