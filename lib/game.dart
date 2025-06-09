@@ -16,6 +16,8 @@ import 'components/jogador/StatusDoJogador.dart';
 import 'domain/MapTile.dart';
 import 'domain/Mapa.dart';
 
+//TODO: Fazer GameOver e tela de menu.
+
 class BoardGame extends StatefulWidget {
   BoardGame({super.key});
 
@@ -41,7 +43,7 @@ class _BoardGameState extends State<BoardGame> {
         return MapNavigator(
           initialMap: '/mapa-floresta',
           maps: {
-            '/mapa-floresta': (context, args) => MapItem(
+            '/Mapa-Floresta': (context, args) => MapItem(
               id: 'map1',
               map: WorldMapByTiled(
                 WorldMapReader.fromAsset(controller.atlas.mapas[0].caminhoDoArquivo),
@@ -51,7 +53,7 @@ class _BoardGameState extends State<BoardGame> {
                 'caminhoPrincipal': controller.atlas.mapas[0].caminhoPrincipal,
               },
             ),
-            '/mapa-agua': (context, args) => MapItem(
+            '/Mapa-Agua': (context, args) => MapItem(
               id: 'map2',
               map: WorldMapByTiled(
                 WorldMapReader.fromAsset(controller.atlas.mapas[1].caminhoDoArquivo),
