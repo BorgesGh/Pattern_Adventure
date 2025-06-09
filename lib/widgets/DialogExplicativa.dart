@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class Dialogexplicativa extends StatefulWidget {
   final String imageUrl; // Direct attribute
-  final String explanation; // Direct attribute
+  final RichText explanation; // Direct attribute
   final VoidCallback onClose;
 
   const Dialogexplicativa({
@@ -115,16 +115,6 @@ class _InfoDialogState extends State<Dialogexplicativa>
               child: Image.asset(
                 widget.imageUrl, // Accessing direct attribute
                 fit: BoxFit.contain,
-                // errorBuilder: (BuildContext context, Object exception,
-                //     StackTrace? stackTrace) {
-                //   return Center(
-                //     child: Icon(
-                //       Icons.broken_image_outlined,
-                //       color: Colors.grey.shade400,
-                //       size: dialogWidth * 0.2,
-                //     ),
-                //   );
-                // },
               ),
             ),
           ),
@@ -133,15 +123,7 @@ class _InfoDialogState extends State<Dialogexplicativa>
           flex: 2,
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: Text(
-              widget.explanation, // Accessing direct attribute
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: baseFontSize,
-                color: Colors.black87,
-                height: 1.4,
-              ),
-            ),
+            child: widget.explanation,
           ),
         ),
         const SizedBox(height: 16),
