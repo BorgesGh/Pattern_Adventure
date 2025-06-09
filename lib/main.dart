@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jogo_tabuleiro/repository/DbHelper.dart';
+import 'package:jogo_tabuleiro/screens/Menu.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'game.dart';
 
@@ -14,7 +15,11 @@ Future<void> main() async {
   databaseFactory = databaseFactoryFfi;
 
   var db = await DbHelper(); // Inicializa o banco de dados
+
+  await deleteDatabase('perguntas.db'); // Deleta o banco de dados para testes
+
   // db.popularBanco();
+  db.popularBancoArrasto();
 
   runApp(const BoardGameApp());
 
@@ -33,12 +38,10 @@ class BoardGameApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-     home: Scaffold(
-       body: BoardGame(),
+     home: const Scaffold(
+       body: Menu(),
      ),
     );
   }
 
 }
-
-
