@@ -1,7 +1,9 @@
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:jogo_tabuleiro/components/GameStateManager.dart';
+import 'package:jogo_tabuleiro/utils/AssetsUrl.dart';
 
 import 'Player.dart';
 
@@ -19,7 +21,9 @@ class StatusDoJogador extends ChangeNotifier {
   int get perguntasTotais => _perguntasTotais;
   int get perguntasAcertadas => _perguntasRespondidas;
 
-  StatusDoJogador();
+  StatusDoJogador() {
+    FlameAudio.bgm.play(AssetsUrl.musica_normal);
+  }
 
   void set perguntasTotais(int value) {
     _perguntasTotais = value;
@@ -38,15 +42,21 @@ class StatusDoJogador extends ChangeNotifier {
   void respondeuPergunta(bool acertou) {
     if (acertou) {
       _pontuacao += 100;
+      FlameAudio.play(AssetsUrl.effect_acertou);
+
     } else {
       _vidas -= 1;
       if(estaVivo){
         estadoDoJogo.changeState(GameState.GameOver); // Muda o estado do jogo para GameOver
+
       }
+      FlameAudio.play(AssetsUrl.effect_errou);
+
     }
     _perguntasRespondidas++;
     if(_perguntasRespondidas >= _perguntasTotais / 2) {
       estadoDoJogo.changeState(GameState.Pesadelo); // Muda o estado do jogo para Pesadelo
+      FlameAudio.bgm.play(AssetsUrl.musica_noite,volume: 0.30);
     }
     notifyListeners(); // Notifica os ouvintes sobre todas as mudanças
   }
@@ -66,6 +76,7 @@ class StatusDoJogador extends ChangeNotifier {
     _perguntasTotais = 0;
     _perguntasRespondidas = 0;
     estadoDoJogo.changeState(GameState.playing);
+    FlameAudio.bgm.play(AssetsUrl.musica_normal, volume: 0.30);
     notifyListeners();
   }
 }

@@ -106,7 +106,7 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
           case 'Floresta':
             MapNavigator.of(context).toNamed("/Mapa-Agua");
             break;
-          case 'Mapa 2':
+          case 'Mapa-Agua':
             estado.changeState(GameState.intro);
             break;
           default:

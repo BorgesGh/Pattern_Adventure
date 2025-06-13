@@ -6,13 +6,15 @@ class AssetsUrl {
   static const String explicacao_1 = 'assets/images/explanations/explan_01.png';
   static const String explicacao_2 = 'assets/images/explanations/explan_02.png';
 
-  static const String musica_normal = 'assets/audio/Soundtrack-normal.mp3';
-  static const String musica_noite = 'assets/audio/Soundtrack-noite.mp3';
+  //Sons e musicas
 
-  static const String effect_acertou = 'assets/audio/Som-acerto-pergunta.wav';
-  static const String effect_errou = 'assets/audio/Som-erro-pergunta.wav';
+  static const String musica_normal = 'Soundtrack-normal.mp3';
+  static const String musica_noite = 'Soundtrack-noite.mp3';
 
-  static const String som_hit_inimigo = 'assets/audio/Som-hit-inimigo.wav';
+  static const String effect_acertou = 'Som-acerto-pergunta.wav';
+  static const String effect_errou = 'Som-erro-pergunta.wav';
+
+  static const String som_hit_inimigo = 'Som-hit-inimigo.wav';
 
   // Diagramas
 
@@ -25,6 +27,20 @@ class AssetsUrl {
   static const String diagrama_singleton = 'assets/images/diagramas/Singleton.png';
   static const String diagrama_state = 'assets/images/diagramas/State.png';
   static const String diagrama_strategy = 'assets/images/diagramas/Strategy.png';
+
+  static Map<String, String> obterDiagramas() {
+    return {
+      'Abstract Factory': AssetsUrl.diagrama_abstract_factory,
+      'Adapter': AssetsUrl.diagrama_adapter,
+      'Bridge': AssetsUrl.diagrama_bridge,
+      'Decorator': AssetsUrl.diagrama_decorator,
+      'Factory': AssetsUrl.diagrama_factory,
+      'Observer': AssetsUrl.diagrama_observer,
+      'Singleton': AssetsUrl.diagrama_singleton,
+      'State': AssetsUrl.diagrama_state,
+      'Strategy': AssetsUrl.diagrama_strategy,
+    };
+  }
 
 
 }
