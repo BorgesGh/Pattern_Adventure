@@ -16,9 +16,11 @@ Future<void> main() async {
 
   var db = await DbHelper(); // Inicializa o banco de dados
 
-  await deleteDatabase('perguntas.db'); // Deleta o banco de dados para testes
+  // await deleteDatabase('perguntas.db'); // Deleta o banco de dados para testes
 
   // db.popularBanco();
+  // db.popularQuestoes();
+  // db.popularQuestoes2();
   db.popularBancoArrasto();
 
   runApp(const BoardGameApp());

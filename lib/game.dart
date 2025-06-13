@@ -16,8 +16,6 @@ import 'components/jogador/StatusDoJogador.dart';
 import 'domain/MapTile.dart';
 import 'domain/Mapa.dart';
 
-//TODO: Fazer GameOver e tela de menu.
-
 class BoardGame extends StatefulWidget {
   BoardGame({super.key});
 
