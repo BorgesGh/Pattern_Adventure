@@ -79,4 +79,8 @@ class StatusDoJogador extends ChangeNotifier {
     FlameAudio.bgm.play(AssetsUrl.musica_normal, volume: 0.30);
     notifyListeners();
   }
+
+  void gameOver(){
+
+  }
 }

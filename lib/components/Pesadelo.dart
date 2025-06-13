@@ -44,7 +44,7 @@ class Pesadelo extends SimpleEnemy with PathFinding {
   @override
   Future<void> onLoad() {
     pesadeloFace = CharacterSpriteSheet.getRostoPesadelo();
-    position = gameRef.player!.position + Vector2(3 * MapTile.tileSize, 0); // Posição inicial do Pesadelo
+    // position = gameRef.player!.position + Vector2(3 * MapTile.tileSize, 0); // Posição inicial do Pesadelo
 
     return super.onLoad();
   }

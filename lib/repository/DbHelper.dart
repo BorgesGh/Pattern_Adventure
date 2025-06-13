@@ -43,9 +43,8 @@ class DbHelper {
       solucao_imagem TEXT
     )
   ''');
-    // TODO: Por algum motivo o HeaderImagem não está salvando corretamente no banco de dados.
     await db.execute('''
-    CREATE TABLE (
+    CREATE TABLE questoes_arrasto (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       caminhosImagens TEXT NOT NULL,
       ordemCorreta TEXT NOT NULL,
@@ -53,7 +52,6 @@ class DbHelper {
     )
   ''');
   }
-
 
   Future<int> inserirPergunta(Pergunta pergunta) async {
     final db = await database;
@@ -90,7 +88,7 @@ class DbHelper {
   Future<int> inserirPerguntaArrasto(PerguntaArrasto pergunta) async {
     final db = await database;
     return await db.insert(
-      'perguntas_arrasto',
+      'questoes_arrasto',
       pergunta.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -98,7 +96,7 @@ class DbHelper {
 
   Future<List<PerguntaArrasto>> buscarPerguntasArrasto() async {
     final db = await database;
-    final resultado = await db.query('perguntas_arrasto');
+    final resultado = await db.query('questoes_arrasto');
 
     return resultado.map((row) {
       return PerguntaArrasto.fromMap(row);
@@ -129,25 +127,6 @@ class DbHelper {
     return PerguntaArrasto.fromMap(resultado.first);
   }
 
-  void popularBanco(){
-    inserirPergunta(
-      Pergunta(
-        pergunta: "Qual é a capital da França?",
-        alternativas: ["Londres", "Paris", "Berlim", "Madri"],
-        indexSolucao: 0,
-        solucao: "Paris é a capital da França.",
-        dificuldade: Dificuldade.facil,
-      ),
-    );
-    buscarPerguntas().then((perguntas) {
-      for (var pergunta in perguntas) {
-        print("Pergunta: ${pergunta.pergunta}");
-        print("Alternativas: ${pergunta.alternativas}");
-        print("Solução: ${pergunta.solucao}");
-        print("Header Image: ${pergunta.headerImagem}");
-      }
-    });
-  }
   
   void popularQuestoes(){
       // 1. Abstract Factory
@@ -571,13 +550,12 @@ class DbHelper {
 
   }
 
-
   void popularBancoArrasto() {
     final mapaDiagramas = AssetsUrl.obterDiagramas();
     final random = Random();
 
     final db = database;
-    db.then((dbInstance) => dbInstance.delete('perguntas_arrasto')); // Deletar todas as perguntas arrasto antes de popular
+    db.then((dbInstance) => dbInstance.delete('questoes_arrasto')); // Deletar todas as perguntas arrasto antes de popular
     // Para gerar novas combinações por gameplay
 
     for(int i = 0; i < 3;i++) { // Inserir pelo menos 3 perguntas

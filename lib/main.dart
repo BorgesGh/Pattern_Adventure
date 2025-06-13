@@ -7,20 +7,22 @@ import 'game.dart';
 
 Future<void> main() async {
 
-  WidgetsFlutterBinding.ensureInitialized();
   // Inicializa a FFI antes de usar qualquer funcionalidade do sqflite
   sqfliteFfiInit();
 
   // Configura a fábrica global para usar FFI
-  databaseFactory = databaseFactoryFfi;
+  // databaseFactory = databaseFactoryFfi;
 
-  var db = await DbHelper(); // Inicializa o banco de dados
+  WidgetsFlutterBinding.ensureInitialized();
 
   // await deleteDatabase('perguntas.db'); // Deleta o banco de dados para testes
 
-  // db.popularBanco();
-  // db.popularQuestoes();
-  // db.popularQuestoes2();
+  var db = DbHelper(); // Inicializa o banco de dados
+
+  await db.database;
+
+  db.popularQuestoes();
+  db.popularQuestoes2();
   db.popularBancoArrasto();
 
   runApp(const BoardGameApp());

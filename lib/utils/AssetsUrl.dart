@@ -14,7 +14,7 @@ class AssetsUrl {
   static const String effect_acertou = 'Som-acerto-pergunta.wav';
   static const String effect_errou = 'Som-erro-pergunta.wav';
 
-  static const String som_hit_inimigo = 'Som-hit-inimigo.wav';
+  static const String som_hit_inimigo = 'Som-hit-iminigo.wav';
 
   // Diagramas
 
