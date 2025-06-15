@@ -95,30 +95,7 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
       print("Respondeu todas as perguntas: ${statusDoJogador.respondeuTodasPerguntas}");
       print("iniciouNovoMapa: $iniciouNovoMapa");
 
-      if (!statusDoJogador.estaVivo || estado.value == GameState.GameOver) {
-        estado.changeState(GameState.GameOver);
-        // print("O jogador morreu!");
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => const GameOver(),
-        ));
-      }
-      else if(statusDoJogador.respondeuTodasPerguntas && !iniciouNovoMapa){
-        iniciouNovoMapa = true;
-        statusDoJogador.resetarStatus();
-        String nomeMapaAtual = Atlas().atual.nomeMapa;
-        print("Mapa Atual: $nomeMapaAtual");
-        switch (nomeMapaAtual) {
-          case 'Floresta':
-            MapNavigator.of(context).toNamed("/Mapa-Agua");
-            FlameAudio.bgm.play(AssetsUrl.musica_normal, volume: 0.30);
-            break;
-          case 'Mapa-Agua':
-            statusDoJogador.gameOver();
-            break;
-          default:
-            estado.changeState(GameState.playing);
-        }
-      }
+
     });
 
     super.onMount();
@@ -211,5 +188,44 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
                   }));
     });
 
+  }
+
+  @override
+  void update(double dt) {
+    if (!statusDoJogador.estaVivo || estado.value == GameState.GameOver) {
+      estado.changeState(GameState.GameOver);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => const GameOver(),
+        ));
+      });
+    }
+    else if(statusDoJogador.respondeuTodasPerguntas && !iniciouNovoMapa) {
+      iniciouNovoMapa = true;
+      statusDoJogador.resetarStatus();
+      String nomeMapaAtual = Atlas().atual.nomeMapa;
+      print("Mapa Atual: $nomeMapaAtual");
+      switch (nomeMapaAtual) {
+        case 'Floresta':
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            MapNavigator.of(context).toNamed("/Mapa-Agua");
+          });
+          FlameAudio.bgm.play(AssetsUrl.musica_normal, volume: 0.30);
+          break;
+        case 'Mapa-Agua':
+          statusDoJogador.gameOver();
+          estado.changeState(GameState.GameOver);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushReplacement(context, MaterialPageRoute(
+              builder: (context) => const GameOver(),
+            ));
+            removeFromParent();
+          });
+          break;
+        default:
+          estado.changeState(GameState.playing);
+      }
+    }
+    super.update(dt);
   }
 }

@@ -36,7 +36,7 @@ class StatusDoJogador extends ChangeNotifier {
 
   bool get estaVivo => _vidas > 0;
 
-  bool get respondeuTodasPerguntas => _perguntasRespondidas == _perguntasTotais;
+  bool get respondeuTodasPerguntas => _perguntasRespondidas == _perguntasTotais && _perguntasTotais > 0;
 
   // Métodos
   void respondeuPergunta(bool acertou) {

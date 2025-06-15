@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jogo_tabuleiro/repository/DbHelper.dart';
@@ -11,7 +14,9 @@ Future<void> main() async {
   sqfliteFfiInit();
 
   // Configura a fábrica global para usar FFI
-  // databaseFactory = databaseFactoryFfi;
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    databaseFactory = databaseFactoryFfi;
+  }
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -21,8 +26,7 @@ Future<void> main() async {
 
   await db.database;
 
-  db.popularQuestoes();
-  db.popularQuestoes2();
+
   db.popularBancoArrasto();
 
   runApp(const BoardGameApp());
