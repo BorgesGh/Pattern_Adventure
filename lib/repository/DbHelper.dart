@@ -51,6 +51,9 @@ class DbHelper {
       alternativas TEXT NOT NULL
     )
   ''');
+
+    popularQuestoes();
+    popularQuestoes2();
   }
 
   Future<int> inserirPergunta(Pergunta pergunta) async {
@@ -552,7 +555,8 @@ class DbHelper {
 
   void popularBancoArrasto() {
     final mapaDiagramas = AssetsUrl.obterDiagramas();
-    final random = Random();
+
+    final random = Random(DateTime.now().millisecondsSinceEpoch);
 
     final db = database;
     db.then((dbInstance) => dbInstance.delete('questoes_arrasto')); // Deletar todas as perguntas arrasto antes de popular
