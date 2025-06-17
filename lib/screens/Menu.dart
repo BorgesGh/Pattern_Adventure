@@ -36,7 +36,7 @@ class Menu extends StatelessWidget {
               ),
             onPressed: () {
               Navigator.of(context).pushReplacement(
-                CupertinoPageRoute(builder: (context) => BoardGame()),
+                CupertinoPageRoute(builder: (context) => PadroesProjetoGame()),
               );
             },
             child: const Text('Iniciar Jogo',style: TextStyle(color: Colors.white),)),

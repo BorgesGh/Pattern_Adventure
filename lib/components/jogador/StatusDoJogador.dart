@@ -46,7 +46,7 @@ class StatusDoJogador extends ChangeNotifier {
 
     } else {
       _vidas -= 1;
-      if(estaVivo){
+      if(!estaVivo){
         estadoDoJogo.changeState(GameState.GameOver); // Muda o estado do jogo para GameOver
 
       }
@@ -80,7 +80,4 @@ class StatusDoJogador extends ChangeNotifier {
     notifyListeners();
   }
 
-  void gameOver(){
-
-  }
 }

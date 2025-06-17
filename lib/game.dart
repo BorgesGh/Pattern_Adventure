@@ -16,14 +16,14 @@ import 'components/jogador/StatusDoJogador.dart';
 import 'domain/MapTile.dart';
 import 'domain/Mapa.dart';
 
-class BoardGame extends StatefulWidget {
-  BoardGame({super.key});
+class PadroesProjetoGame extends StatefulWidget {
+  PadroesProjetoGame({super.key});
 
   @override
-  State<BoardGame> createState() => _BoardGameState();
+  State<PadroesProjetoGame> createState() => _PadroesProjetoGameState();
 }
 
-class _BoardGameState extends State<BoardGame> {
+class _PadroesProjetoGameState extends State<PadroesProjetoGame> {
   final GameStateManager estadoManager = GameStateManager(GameState.intro);
   final StatusDoJogador status = StatusDoJogador();
   final GameController controller = GameController();
@@ -73,13 +73,11 @@ class _BoardGameState extends State<BoardGame> {
               player: Jogador(
                 position: map.properties['caminhoPrincipal'][0].position,
                 mapa: map.properties['mapa'],
-                indexDePerguntas: controller.atlas.indiceDePerguntas,
                 statusDoJogador: status,
                 estado: estadoManager,
               ),
               components: [
                 Pesadelo(
-                  caminho: map.properties['caminhoPrincipal'],
                   statusDoJogador: status,
                   estadoDoJogo: estadoManager,
                 ),

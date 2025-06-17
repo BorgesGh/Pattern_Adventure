@@ -13,25 +13,24 @@ Future<void> main() async {
   // Inicializa a FFI antes de usar qualquer funcionalidade do sqflite
   sqfliteFfiInit();
 
-  // Configura a fábrica global para usar FFI
+  // definir factory quando o dispositivo for desktop
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     databaseFactory = databaseFactoryFfi;
   }
 
+  // deleteDatabase('perguntas.db'); // Deletar o banco de dados para testes
+
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await deleteDatabase('perguntas.db'); // Deleta o banco de dados para testes
-
   var db = DbHelper(); // Inicializa o banco de dados
-
   await db.database;
 
+  // db.popularQuestoes();
 
-  db.popularBancoArrasto();
+  db.popularBancoArrasto(); // Aleatorizar as perguntas de diagramas
 
   runApp(const BoardGameApp());
 
-  // TODO: Setar a orientação da tela em LandScape (Deitado)
   DeviceOrientation.landscapeLeft;
 }
 
@@ -51,5 +50,4 @@ class BoardGameApp extends StatelessWidget {
      ),
     );
   }
-
 }

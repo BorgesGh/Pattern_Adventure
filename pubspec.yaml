@@ -74,6 +74,7 @@ flutter:
     - assets/images/character/
     - assets/images/explanations/
     - assets/images/diagramas/
+    - assets/images/diagramas/perguntas/
     - assets/images/tiled/
     - assets/images/tiled/Mapa.json
     - assets/audio/
