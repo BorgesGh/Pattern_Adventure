@@ -18,7 +18,7 @@ class GameOver extends StatelessWidget {
           children: [
             const Text(
               'Fim de Jogo',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,decoration: TextDecoration.none, color: Colors.black),
             ),
             const SizedBox(height: 20),
             CupertinoButton(

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jogo_tabuleiro/repository/DbHelper.dart';
@@ -7,18 +10,23 @@ import 'game.dart';
 
 Future<void> main() async {
 
-  WidgetsFlutterBinding.ensureInitialized();
   // Inicializa a FFI antes de usar qualquer funcionalidade do sqflite
   sqfliteFfiInit();
 
   // Configura a fábrica global para usar FFI
-  databaseFactory = databaseFactoryFfi;
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    databaseFactory = databaseFactoryFfi;
+  }
 
-  var db = await DbHelper(); // Inicializa o banco de dados
+  WidgetsFlutterBinding.ensureInitialized();
 
-  await deleteDatabase('perguntas.db'); // Deleta o banco de dados para testes
+  // await deleteDatabase('perguntas.db'); // Deleta o banco de dados para testes
 
-  // db.popularBanco();
+  var db = DbHelper(); // Inicializa o banco de dados
+
+  await db.database;
+
+
   db.popularBancoArrasto();
 
   runApp(const BoardGameApp());

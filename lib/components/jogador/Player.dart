@@ -4,6 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/player/player.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:jogo_tabuleiro/components/GameStateManager.dart';
 import 'package:jogo_tabuleiro/components/jogador/HudDoJogador.dart';
@@ -91,28 +92,10 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
     }
 
     statusDoJogador.addListener(() {
-      if (!statusDoJogador.estaVivo) {
-        estado.changeState(GameState.GameOver);
-        print("O jogador morreu!");
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => const GameOver(),
-        ));
-      }
-      else if(statusDoJogador.respondeuTodasPerguntas && !iniciouNovoMapa){
-        iniciouNovoMapa = true;
-        statusDoJogador.resetarStatus();
-        String nomeMapaAtual = Atlas().atual.nomeMapa;
-        switch (nomeMapaAtual) {
-          case 'Floresta':
-            MapNavigator.of(context).toNamed("/Mapa-Agua");
-            break;
-          case 'Mapa 2':
-            estado.changeState(GameState.intro);
-            break;
-          default:
-            estado.changeState(GameState.playing);
-        }
-      }
+      print("Respondeu todas as perguntas: ${statusDoJogador.respondeuTodasPerguntas}");
+      print("iniciouNovoMapa: $iniciouNovoMapa");
+
+
     });
 
     super.onMount();
@@ -205,5 +188,44 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
                   }));
     });
 
+  }
+
+  @override
+  void update(double dt) {
+    if (!statusDoJogador.estaVivo || estado.value == GameState.GameOver) {
+      estado.changeState(GameState.GameOver);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => const GameOver(),
+        ));
+      });
+    }
+    else if(statusDoJogador.respondeuTodasPerguntas && !iniciouNovoMapa) {
+      iniciouNovoMapa = true;
+      statusDoJogador.resetarStatus();
+      String nomeMapaAtual = Atlas().atual.nomeMapa;
+      print("Mapa Atual: $nomeMapaAtual");
+      switch (nomeMapaAtual) {
+        case 'Floresta':
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            MapNavigator.of(context).toNamed("/Mapa-Agua");
+          });
+          FlameAudio.bgm.play(AssetsUrl.musica_normal, volume: 0.30);
+          break;
+        case 'Mapa-Agua':
+          statusDoJogador.gameOver();
+          estado.changeState(GameState.GameOver);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushReplacement(context, MaterialPageRoute(
+              builder: (context) => const GameOver(),
+            ));
+            removeFromParent();
+          });
+          break;
+        default:
+          estado.changeState(GameState.playing);
+      }
+    }
+    super.update(dt);
   }
 }

@@ -5,6 +5,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/npc/enemy/simple_enemy.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jogo_tabuleiro/components/GameStateManager.dart';
@@ -43,6 +44,7 @@ class Pesadelo extends SimpleEnemy with PathFinding {
   @override
   Future<void> onLoad() {
     pesadeloFace = CharacterSpriteSheet.getRostoPesadelo();
+    // position = gameRef.player!.position + Vector2(3 * MapTile.tileSize, 0); // Posição inicial do Pesadelo
 
     return super.onLoad();
   }
@@ -144,11 +146,13 @@ class Pesadelo extends SimpleEnemy with PathFinding {
     }
 
     if (!entrouEmContatoComOPlayer) {
-      moveToPosition(gameRef.player!.position);
+      moveToPosition(gameRef.player!.position,speed: speed);
       seeAndMoveToPlayer(
         visionAngle: 80,
         runOnlyVisibleInScreen: false,
+        radiusVision: MapTile.tileSize * 30,
         closePlayer: (player) async {
+          FlameAudio.play(AssetsUrl.som_hit_inimigo);
           final perguntaArrasto = await DbHelper().buscarPerguntaAleatoria();
           entrouEmContatoComOPlayer = true; // Marca que já falou
 
@@ -165,11 +169,8 @@ class Pesadelo extends SimpleEnemy with PathFinding {
               },
             ),
           );
-
-        },
-        radiusVision: MapTile.tileSize * 30,
+        }
       );
-
       return;
     }
   }
