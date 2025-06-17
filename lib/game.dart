@@ -96,14 +96,12 @@ class _PadroesProjetoGameState extends State<PadroesProjetoGame> {
                 ),
               ],
               onReady: (BonfireGameInterface gameRef) async {
-                print("O Jogo está pronto!");
                 setState(() {
                   gameRef.map.removeWhere((c) => c is LocalDePergunta);
                   controller.atlas.atual = controller.getMapaPorIndice(mapaAtual);
                   controller.gerarPerguntas(gameRef);
                 });
                 mapaAtual++;
-                print("Mapa Atual: $mapaAtual");
               },
               hudComponents: [HudDoJogador(status)],
               lightingColorGame: Colors.transparent,

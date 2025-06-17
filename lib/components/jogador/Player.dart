@@ -104,7 +104,7 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
         person: rostoNeutro,
         text: [
           const TextSpan(
-            text: 'Eu estava na minha cama agora mesmo e derrepente...\n',
+            text: 'Eu estava na minha cama agora mesmo e de repente...\n',
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ],
