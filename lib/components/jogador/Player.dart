@@ -30,8 +30,6 @@ enum GameState {
 class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lighting {
 
   Mapa mapa;
-  List<int> indexDePerguntas = [];
-  List<MapTile> caminho = [];
   StatusDoJogador statusDoJogador;
   GameStateManager estado;
   bool iniciouNovoMapa = false;
@@ -42,7 +40,6 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
   Jogador({
     required Vector2 position,
     required this.mapa,
-    required this.indexDePerguntas,
     required this.statusDoJogador,
     required this.estado,
   }) : super(
@@ -52,7 +49,6 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
     size: Vector2.all(MapTile.tileSize),
 
   ) {
-    caminho = mapa.caminhoPrincipal; // atribui o caminho do mapa ao jogador
     priority = 1000;
     setupLighting(
       LightingConfig(
@@ -90,14 +86,6 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
       await completerDialogoIntro.future;
 
     }
-
-    statusDoJogador.addListener(() {
-      print("Respondeu todas as perguntas: ${statusDoJogador.respondeuTodasPerguntas}");
-      print("iniciouNovoMapa: $iniciouNovoMapa");
-
-
-    });
-
     super.onMount();
   }
 
@@ -198,6 +186,7 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
         Navigator.pushReplacement(context, MaterialPageRoute(
           builder: (context) => const GameOver(),
         ));
+        removeFromParent();
       });
     }
     else if(statusDoJogador.respondeuTodasPerguntas && !iniciouNovoMapa) {
@@ -209,11 +198,10 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
         case 'Floresta':
           WidgetsBinding.instance.addPostFrameCallback((_) {
             MapNavigator.of(context).toNamed("/Mapa-Agua");
+            FlameAudio.bgm.play(AssetsUrl.musica_normal, volume: 0.30);
           });
-          FlameAudio.bgm.play(AssetsUrl.musica_normal, volume: 0.30);
           break;
         case 'Mapa-Agua':
-          statusDoJogador.gameOver();
           estado.changeState(GameState.GameOver);
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.pushReplacement(context, MaterialPageRoute(

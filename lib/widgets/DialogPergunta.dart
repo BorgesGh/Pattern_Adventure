@@ -59,66 +59,26 @@ class _DialogPerguntaState extends State<DialogPergunta>
     widget.onRespondido(acertou);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
-    // --- Lógica para responsividade do tamanho do diálogo ---
-    // Percentuais para ocupar "quase toda a tela" em mobile
-    const double mobileWidthPercentage = 0.90; // 90% da largura da tela
-    const double mobileHeightPercentage = 0.80; // 80% da altura da tela (ajuste conforme necessário)
-
-    // Tamanhos máximos para desktop
-    const double desktopMaxWidth = 550.0;
-    const double desktopMaxHeight = 700.0; // Ajustado para um bom tamanho de diálogo desktop
-
-    // Calcula a largura desejada baseada na porcentagem da tela
-    double desiredWidth = screenSize.width * mobileWidthPercentage;
-    // Calcula a altura desejada baseada na porcentagem da tela
-    double desiredHeight = screenSize.height * mobileHeightPercentage;
-
-    // Aplica o tamanho máximo para desktop, sem exceder o tamanho da tela
-    // Garante que a largura do diálogo não exceda desktopMaxWidth nem 95% da largura da tela
-    double finalDialogWidth = math.min(desiredWidth, desktopMaxWidth);
-    finalDialogWidth = math.min(finalDialogWidth, screenSize.width * 0.95); // Garante uma margem mínima
-
-    // Garante que a altura do diálogo não exceda desktopMaxHeight nem 95% da altura da tela
-    double finalDialogHeight = math.min(desiredHeight, desktopMaxHeight);
-    finalDialogHeight = math.min(finalDialogHeight, screenSize.height * 0.95); // Garante uma margem mínima
-    // --- Fim da lógica de responsividade do tamanho ---
-
-    return Center(
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.all(20), // Padding interno do diálogo
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
-            width: finalDialogWidth,   // Largura responsiva
-            height: finalDialogHeight, // Altura responsiva
-            child: mostrarFeedback ? _buildFeedback() : _buildPergunta(),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildPergunta() {
     return Column(
       // mainAxisSize: MainAxisSize.min, // Removido para permitir que Expanded funcione corretamente
       children: [
         Expanded(child:
-        widget.pergunta.headerImagem != null
-            ? Image.asset(
-          widget.pergunta.headerImagem!,
-          fit: BoxFit.cover,
-        )
-            : const SizedBox.shrink(),
+        widget.pergunta.headerImagem != null && widget.pergunta.headerImagem!.isNotEmpty
+            ? InteractiveViewer(
+                panEnabled: true,
+                minScale: 0.5,
+                maxScale: 4.0,
+                child: Center(
+                  child: Image.asset(
+                    widget.pergunta.headerImagem!,
+                  ),
+                ),
+              )
+        : const SizedBox.shrink(),
+
         ),
+        const SizedBox(height: 8), // Espaçamento reduzido ligeiramente
         Expanded(
           flex: 2, // Ajuste o flex para dar mais ou menos espaço para a pergunta
           child: SingleChildScrollView(
@@ -182,6 +142,54 @@ class _DialogPerguntaState extends State<DialogPergunta>
           ),
         ),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
+    // --- Lógica para responsividade do tamanho do diálogo ---
+    // Percentuais para ocupar "quase toda a tela" em mobile
+    const double mobileWidthPercentage = 0.90; // 90% da largura da tela
+    const double mobileHeightPercentage = 0.80; // 80% da altura da tela (ajuste conforme necessário)
+
+    // Tamanhos máximos para desktop
+    const double desktopMaxWidth = 550.0;
+    const double desktopMaxHeight = 700.0; // Ajustado para um bom tamanho de diálogo desktop
+
+    // Calcula a largura desejada baseada na porcentagem da tela
+    double desiredWidth = screenSize.width * mobileWidthPercentage;
+    // Calcula a altura desejada baseada na porcentagem da tela
+    double desiredHeight = screenSize.height * mobileHeightPercentage;
+
+    // Aplica o tamanho máximo para desktop, sem exceder o tamanho da tela
+    // Garante que a largura do diálogo não exceda desktopMaxWidth nem 95% da largura da tela
+    double finalDialogWidth = math.min(desiredWidth, desktopMaxWidth);
+    finalDialogWidth = math.min(finalDialogWidth, screenSize.width * 0.95); // Garante uma margem mínima
+
+    // Garante que a altura do diálogo não exceda desktopMaxHeight nem 95% da altura da tela
+    double finalDialogHeight = math.min(desiredHeight, desktopMaxHeight);
+    finalDialogHeight = math.min(finalDialogHeight, screenSize.height * 0.95); // Garante uma margem mínima
+    // --- Fim da lógica de responsividade do tamanho ---
+
+    return Center(
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(20), // Padding interno do diálogo
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            width: finalDialogWidth,   // Largura responsiva
+            height: finalDialogHeight, // Altura responsiva
+            child: mostrarFeedback ? _buildFeedback() : _buildPergunta(),
+          ),
+        ),
+      ),
     );
   }
 

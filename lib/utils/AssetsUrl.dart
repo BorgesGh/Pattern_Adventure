@@ -42,5 +42,8 @@ class AssetsUrl {
     };
   }
 
+  //Diagramas no Cabeçalho
+
+  static const String diagrama_pergunta_adapter_wrapper = 'assets/images/diagramas/perguntas/AdapterWrapper.png';
 
 }

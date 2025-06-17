@@ -19,20 +19,19 @@ import '../domain/MapTile.dart';
 import '../utils/CharacterSpriteSheet.dart';
 import '../widgets/DialogArrasto.dart';
 
-class Pesadelo extends SimpleEnemy with PathFinding {
+class Pesadelo extends SimpleEnemy{
 
   late Image pesadeloFace;
   bool entrouEmContatoComOPlayer = false;
   bool entrouNoJogo = false;
   static bool primeiraAparicao = true; // Deixo como estático para que o valor seja guardado na classe, não no objeto
 
-  List<MapTile> caminho = [];
   StatusDoJogador statusDoJogador;
   GameStateManager estadoDoJogo;
 
   final Vector2 _foraDaTela = Vector2(-100, -100);
 
-  Pesadelo({required this.caminho, required this.statusDoJogador, required this.estadoDoJogo}) :super(
+  Pesadelo({required this.statusDoJogador, required this.estadoDoJogo}) :super(
     size: Vector2.all(MapTile.tileSize),
     animation: CharacterSpriteSheet(fileName: 'pesadelo.png').getAnimation(),
     speed: 30,
@@ -44,7 +43,6 @@ class Pesadelo extends SimpleEnemy with PathFinding {
   @override
   Future<void> onLoad() {
     pesadeloFace = CharacterSpriteSheet.getRostoPesadelo();
-    // position = gameRef.player!.position + Vector2(3 * MapTile.tileSize, 0); // Posição inicial do Pesadelo
 
     return super.onLoad();
   }
