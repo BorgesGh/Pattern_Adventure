@@ -1,16 +1,20 @@
-# jogo_tabuleiro
+Title: 🎮 Design Patterns Quiz Game – Learn by Playing!
 
-A new Flutter project.
+Description:
 
-## Getting Started
+An interactive quiz game designed to help developers master the most common software design patterns in a fun and engaging way! 🚀
 
-This project is a starting point for a Flutter application.
+This project features:
 
-A few resources to get you started if this is your first Flutter project:
+    🧠 Multiple-choice questions covering patterns like Abstract Factory, Strategy, Observer, and more
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+    🔄 Randomized answer options to challenge your memory and understanding
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    🎨 Visual diagrams to support learning
+
+    📊 Difficulty levels to track your progress
+
+    🎮 Built with Dart and Flutter for an educational, gamified experience
+
+Perfect for students, developers, or anyone looking to reinforce their knowledge of design patterns through active recall and repetition.
+![Pattern Adventure](https://github.com/user-attachments/assets/7dac8413-1d11-47a4-a468-6ff692d5bf35)
