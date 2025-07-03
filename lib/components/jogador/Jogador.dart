@@ -14,7 +14,7 @@ import 'package:jogo_tabuleiro/utils/AssetsUrl.dart';
 import 'package:jogo_tabuleiro/widgets/DialogExplicativa.dart';
 
 import '../../domain/Mapa.dart';
-import '../../game.dart';
+import '../../PadroesProjetoGame.dart';
 import '../../screens/GameOver.dart';
 import '../../utils/CharacterSpriteSheet.dart';
 import '../../widgets/DialogPergunta.dart';
@@ -71,7 +71,6 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
       size: Vector2.all(MapTile.tileSize - 8),
       position: Vector2.all(MapTile.tileSize / 4),
     ));
-
 
     return super.onLoad();
   }
