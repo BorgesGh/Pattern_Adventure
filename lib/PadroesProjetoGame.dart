@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:jogo_tabuleiro/components/GameController.dart';
 import 'package:jogo_tabuleiro/components/Pesadelo.dart';
 import 'package:jogo_tabuleiro/components/jogador/HudDoJogador.dart';
-import 'package:jogo_tabuleiro/components/jogador/Player.dart';
+import 'package:jogo_tabuleiro/components/jogador/Jogador.dart';
 import 'package:jogo_tabuleiro/domain/Atlas.dart';
 import 'components/GameStateManager.dart';
 import 'components/LocalDePergunta.dart';
@@ -29,11 +29,16 @@ class _PadroesProjetoGameState extends State<PadroesProjetoGame> {
   final GameController controller = GameController();
   int mapaAtual = 0;
 
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     controller.status = status;
     controller.status.estadoDoJogo = estadoManager;
-    controller.constroladorDeEstado = estadoManager; // Passa o gerenciador para o controller
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return ValueListenableBuilder<GameState>(
       valueListenable: estadoManager,
@@ -96,14 +101,12 @@ class _PadroesProjetoGameState extends State<PadroesProjetoGame> {
                 ),
               ],
               onReady: (BonfireGameInterface gameRef) async {
-                print("O Jogo está pronto!");
                 setState(() {
                   gameRef.map.removeWhere((c) => c is LocalDePergunta);
                   controller.atlas.atual = controller.getMapaPorIndice(mapaAtual);
                   controller.gerarPerguntas(gameRef);
                 });
                 mapaAtual++;
-                print("Mapa Atual: $mapaAtual");
               },
               hudComponents: [HudDoJogador(status)],
               lightingColorGame: Colors.transparent,

@@ -6,17 +6,17 @@ import 'package:flutter/services.dart';
 import 'package:jogo_tabuleiro/repository/DbHelper.dart';
 import 'package:jogo_tabuleiro/screens/Menu.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'game.dart';
+import 'PadroesProjetoGame.dart';
 
 Future<void> main() async {
-
-  // Inicializa a FFI antes de usar qualquer funcionalidade do sqflite
-  sqfliteFfiInit();
 
   // definir factory quando o dispositivo for desktop
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     databaseFactory = databaseFactoryFfi;
   }
+
+  // Inicializa a FFI antes de usar qualquer funcionalidade do sqflite
+  sqfliteFfiInit();
 
   // deleteDatabase('perguntas.db'); // Deletar o banco de dados para testes
 

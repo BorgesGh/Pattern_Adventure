@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jogo_tabuleiro/screens/PaginaReferencia.dart';
 
-import '../game.dart'; // Para usar o botão ElevatedButton
+import '../PadroesProjetoGame.dart'; // Para usar o botão ElevatedButton
 // Importe a página do jogo
 // import 'caminho/board_game.dart'; // Ajuste conforme a sua estrutura
 

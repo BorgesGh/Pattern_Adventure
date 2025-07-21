@@ -14,18 +14,12 @@ import 'package:jogo_tabuleiro/utils/AssetsUrl.dart';
 import 'package:jogo_tabuleiro/widgets/DialogExplicativa.dart';
 
 import '../../domain/Mapa.dart';
-import '../../game.dart';
+import '../../PadroesProjetoGame.dart';
 import '../../screens/GameOver.dart';
 import '../../utils/CharacterSpriteSheet.dart';
 import '../../widgets/DialogPergunta.dart';
 import 'StatusDoJogador.dart';
 
-enum GameState {
-  intro,
-  playing,
-  Pesadelo,
-  GameOver
-}
 
 class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lighting {
 
@@ -72,7 +66,6 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
       position: Vector2.all(MapTile.tileSize / 4),
     ));
 
-
     return super.onLoad();
   }
 
@@ -104,7 +97,7 @@ class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lig
         person: rostoNeutro,
         text: [
           const TextSpan(
-            text: 'Eu estava na minha cama agora mesmo e derrepente...\n',
+            text: 'Eu estava na minha cama agora mesmo e de repente...\n',
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ],

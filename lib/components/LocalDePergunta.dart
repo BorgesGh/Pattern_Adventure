@@ -8,7 +8,7 @@ import 'package:jogo_tabuleiro/components/jogador/StatusDoJogador.dart';
 import 'package:jogo_tabuleiro/domain/Pergunta.dart';
 
 import '../domain/MapTile.dart';
-import '../components/jogador/Player.dart' as MeuPlayer;
+import '../components/jogador/Jogador.dart' as MeuPlayer;
 import '../widgets/DialogPergunta.dart';
 
 class LocalDePergunta extends GameComponent with Sensor<Player> {
