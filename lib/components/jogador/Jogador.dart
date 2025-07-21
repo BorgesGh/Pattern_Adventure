@@ -20,12 +20,6 @@ import '../../utils/CharacterSpriteSheet.dart';
 import '../../widgets/DialogPergunta.dart';
 import 'StatusDoJogador.dart';
 
-enum GameState {
-  intro,
-  playing,
-  Pesadelo,
-  GameOver
-}
 
 class Jogador extends SimplePlayer with PathFinding, BlockMovementCollision, Lighting {
 

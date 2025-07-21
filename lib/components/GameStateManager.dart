@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'jogador/Player.dart';
+import 'jogador/Jogador.dart';
+
+enum GameState {
+  intro,
+  playing,
+  Pesadelo,
+  GameOver
+}
+
 
 class GameStateManager extends ValueNotifier<GameState> {
   GameStateManager(super.value);
