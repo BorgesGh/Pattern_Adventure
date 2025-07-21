@@ -5,9 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:jogo_tabuleiro/components/GameStateManager.dart';
 import 'package:jogo_tabuleiro/utils/AssetsUrl.dart';
 
-import 'Player.dart';
+import 'Jogador.dart';
 
-class StatusDoJogador extends ChangeNotifier {
+class StatusDoJogador {
   int _vidas = 3;
   int _pontuacao = 0; // Adicionada a declaração de _pontuacao
   int _perguntasTotais = 0;
@@ -27,11 +27,9 @@ class StatusDoJogador extends ChangeNotifier {
 
   void set perguntasTotais(int value) {
     _perguntasTotais = value;
-    notifyListeners(); // Notifica os ouvintes sobre a mudança
   }
   void set perguntasAcertadas(int value) {
     _perguntasRespondidas = value;
-    notifyListeners(); // Notifica os ouvintes sobre a mudança
   }
 
   bool get estaVivo => _vidas > 0;
@@ -58,7 +56,6 @@ class StatusDoJogador extends ChangeNotifier {
       estadoDoJogo.changeState(GameState.Pesadelo); // Muda o estado do jogo para Pesadelo
       FlameAudio.bgm.play(AssetsUrl.musica_noite,volume: 0.30);
     }
-    notifyListeners(); // Notifica os ouvintes sobre todas as mudanças
   }
 
   void perguntaPesadelo(bool acertou){
@@ -67,7 +64,6 @@ class StatusDoJogador extends ChangeNotifier {
     } else {
       _vidas -= 1; // Perde uma vida se errar
     }
-    notifyListeners(); // Notifica os ouvintes sobre a mudança
   }
 
   //Não resetar vidas para não
@@ -77,7 +73,6 @@ class StatusDoJogador extends ChangeNotifier {
     _perguntasRespondidas = 0;
     estadoDoJogo.changeState(GameState.playing);
     FlameAudio.bgm.play(AssetsUrl.musica_normal, volume: 0.30);
-    notifyListeners();
-  }
 
+  }
 }
