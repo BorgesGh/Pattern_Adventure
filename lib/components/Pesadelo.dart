@@ -9,7 +9,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jogo_tabuleiro/components/GameStateManager.dart';
-import 'package:jogo_tabuleiro/components/jogador/Player.dart';
+import 'package:jogo_tabuleiro/components/jogador/Jogador.dart';
 import 'package:jogo_tabuleiro/components/jogador/StatusDoJogador.dart';
 import 'package:jogo_tabuleiro/repository/DbHelper.dart';
 import 'package:jogo_tabuleiro/utils/AssetsUrl.dart';

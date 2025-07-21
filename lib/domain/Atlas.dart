@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:jogo_tabuleiro/domain/MapTile.dart';
 import 'package:jogo_tabuleiro/domain/Mapa.dart';
 import 'package:jogo_tabuleiro/domain/Pergunta.dart';
-import 'package:jogo_tabuleiro/game.dart';
+import 'package:jogo_tabuleiro/PadroesProjetoGame.dart';
 import 'package:jogo_tabuleiro/repository/DbHelper.dart';
 import 'package:sqflite/sqflite.dart';
 

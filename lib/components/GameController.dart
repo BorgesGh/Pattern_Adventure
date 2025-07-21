@@ -8,7 +8,7 @@ import 'package:jogo_tabuleiro/components/jogador/StatusDoJogador.dart';
 import 'package:jogo_tabuleiro/domain/Mapa.dart';
 
 import '../domain/Atlas.dart';
-import 'jogador/Player.dart';
+import 'jogador/Jogador.dart';
 
 class GameController extends GameComponent{
 

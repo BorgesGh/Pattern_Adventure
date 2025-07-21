@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:bonfire/base/game_component.dart';
 import 'package:jogo_tabuleiro/domain/MapTile.dart';
-import 'package:jogo_tabuleiro/game.dart';
+import 'package:jogo_tabuleiro/PadroesProjetoGame.dart';
 enum Dificuldade {
   facil,
   medio,
