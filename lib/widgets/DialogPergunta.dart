@@ -130,9 +130,9 @@ class _DialogPerguntaState extends State<DialogPergunta>
                       widget.pergunta.alternativas[index],
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        fontSize: 14, // Ajuste o tamanho da fonte se necessário
+                        fontSize: 12, // Ajuste o tamanho da fonte se necessário
                         color: Colors.black,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
