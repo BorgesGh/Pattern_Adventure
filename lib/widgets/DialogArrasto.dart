@@ -22,19 +22,32 @@ class _DialogArrastoState extends State<DialogArrasto> {
   bool _acertou = false;
   int? _imagemExpandidaIndex;
 
+  // NOVO: listas de ordem visual (contêm índices originais das imagens/caixas)
+  late List<int> _draggableOrder;
+  late List<int> _targetOrder;
+
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < widget.pergunta.caminhosImagens.length; i++) {
+    final n = widget.pergunta.caminhosImagens.length;
+
+    // inicializa alvos/ disponibilidade (chaves são índices visuais dos alvos)
+    for (int i = 0; i < n; i++) {
       _alvos[i] = null;
-      _imagemDisponivel[i] = true; // Todas as imagens começam disponíveis
+      _imagemDisponivel[i] = true;
     }
+
+    // cria e embaralha as ordens visuais (mantendo índices originais)
+    _draggableOrder = List.generate(n, (i) => i)..shuffle();
+    _targetOrder = List.generate(n, (i) => i)..shuffle();
   }
 
   void _verificarResposta() {
     bool acertou = true;
-    for (int i = 0; i < widget.pergunta.ordemCorreta.length; i++) {
-      if (_alvos[i] != widget.pergunta.ordemCorreta[i]) {
+    for (int visualIndex = 0; visualIndex < _targetOrder.length; visualIndex++) {
+      final originalTargetIndex = _targetOrder[visualIndex];
+      final expectedImageIndex = widget.pergunta.ordemCorreta[originalTargetIndex];
+      if (_alvos[visualIndex] != expectedImageIndex) {
         acertou = false;
         break;
       }
@@ -63,17 +76,18 @@ class _DialogArrastoState extends State<DialogArrasto> {
     });
   }
 
-  Widget _buildDraggable(int index) {
-    if (!_imagemDisponivel[index]!) {
-      return const SizedBox.shrink(); // Não mostra imagens já colocadas nos alvos
+  // Agora recebe imageIndex (índice original da imagem)
+  Widget _buildDraggable(int imageIndex) {
+    if (!_imagemDisponivel[imageIndex]!) {
+      return const SizedBox.shrink();
     }
 
-    final imagePath = widget.pergunta.caminhosImagens[index];
+    final imagePath = widget.pergunta.caminhosImagens[imageIndex];
 
     return GestureDetector(
-      onTap: () => _expandirImagem(index),
+      onTap: () => _expandirImagem(imageIndex),
       child: Draggable<int>(
-        data: index,
+        data: imageIndex,
         feedback: Opacity(
           opacity: 0.8,
           child: Image.asset(imagePath, width: 100, height: 100),
@@ -84,13 +98,18 @@ class _DialogArrastoState extends State<DialogArrasto> {
     );
   }
 
-  Widget _buildDragTarget(int index) {
+  // index é o índice visual do alvo; mapeamos para originalTargetIndex
+  Widget _buildDragTarget(int visualIndex) {
+    final originalTargetIndex = _targetOrder[visualIndex];
+
     return DragTarget<int>(
       builder: (context, candidateData, rejectedData) {
+        // se o alvo visual contém uma imagem, _alvos[visualIndex] será o índice original da imagem
+        final placedImageIndex = _alvos[visualIndex];
+        final expectedImageIndex = widget.pergunta.ordemCorreta[originalTargetIndex];
+
         return GestureDetector(
-          onTap: _alvos[index] != null
-              ? () => _expandirImagem(_alvos[index]!)
-              : null,
+          onTap: placedImageIndex != null ? () => _expandirImagem(placedImageIndex) : null,
           child: Container(
             width: 100,
             height: 100,
@@ -98,30 +117,32 @@ class _DialogArrastoState extends State<DialogArrasto> {
             decoration: BoxDecoration(
               border: Border.all(
                 color: _mostrarResultado
-                    ? (_alvos[index] == widget.pergunta.ordemCorreta[index]
-                    ? Colors.green
-                    : Colors.red)
+                    ? (placedImageIndex == expectedImageIndex ? Colors.green : Colors.red)
                     : Colors.blueGrey,
                 width: 2,
               ),
               borderRadius: BorderRadius.circular(8),
-              color: _alvos[index] != null ? Colors.grey.shade200 : Colors.white,
+              color: placedImageIndex != null ? Colors.grey.shade200 : Colors.white,
             ),
-            child: _alvos[index] != null
+            child: placedImageIndex != null
                 ? Image.asset(
-              widget.pergunta.caminhosImagens[_alvos[index]!],
+              widget.pergunta.caminhosImagens[placedImageIndex],
               width: 100,
               height: 100,
             )
                 : _mostrarResultado && !_acertou
-                ? Image.asset(
-              widget.pergunta.caminhosImagens[widget.pergunta.ordemCorreta[index]],
-              width: 100,
-              height: 100,
+                ? GestureDetector(
+              onTap: () => _expandirImagem(expectedImageIndex),
+              child: Image.asset(
+                widget.pergunta.caminhosImagens[expectedImageIndex],
+                width: 100,
+                height: 100,
+              ),
             )
                 : Center(
               child: Text(
-                widget.pergunta.alternativas[widget.pergunta.ordemCorreta[index]],
+                // mostra o nome (alternativa) esperada para este alvo
+                widget.pergunta.alternativas[expectedImageIndex],
                 textAlign: TextAlign.center,
               ),
             ),
@@ -132,7 +153,7 @@ class _DialogArrastoState extends State<DialogArrasto> {
         if (_mostrarResultado) return;
 
         setState(() {
-          // Remove a imagem do alvo anterior se ela estava em outro lugar
+          // remove a imagem do alvo anterior (se já estava em outro)
           for (var entry in _alvos.entries) {
             if (entry.value == details.data) {
               _alvos[entry.key] = null;
@@ -141,8 +162,8 @@ class _DialogArrastoState extends State<DialogArrasto> {
             }
           }
 
-          // Adiciona a imagem ao novo alvo
-          _alvos[index] = details.data;
+          // coloca a imagem no alvo visual atual (visualIndex)
+          _alvos[visualIndex] = details.data;
           _imagemDisponivel[details.data] = false;
         });
       },
@@ -179,8 +200,9 @@ class _DialogArrastoState extends State<DialogArrasto> {
   }
 
   Widget _buildConteudoJogo() {
-    final draggableItems = List.generate(widget.pergunta.caminhosImagens.length, _buildDraggable);
-    final targets = List.generate(widget.pergunta.caminhosImagens.length, _buildDragTarget);
+    // cria widgets de draggable na ordem embaralhada
+    final draggableItems = _draggableOrder.map((imgIdx) => _buildDraggable(imgIdx)).toList();
+    final targets = List.generate(widget.pergunta.caminhosImagens.length, (i) => _buildDragTarget(i));
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -244,6 +266,7 @@ class _DialogArrastoState extends State<DialogArrasto> {
             alignment: WrapAlignment.center,
             spacing: 12,
             runSpacing: 12,
+            // mostra a sequência correta (usa ordemCorreta do modelo)
             children: widget.pergunta.ordemCorreta
                 .map((index) => GestureDetector(
               onTap: () => _expandirImagem(index),
