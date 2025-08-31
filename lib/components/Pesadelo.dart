@@ -19,41 +19,43 @@ import '../domain/MapTile.dart';
 import '../utils/CharacterSpriteSheet.dart';
 import '../widgets/DialogArrasto.dart';
 
-class Pesadelo extends SimpleEnemy{
-
+class Pesadelo extends SimpleEnemy {
   late Image pesadeloFace;
   bool entrouEmContatoComOPlayer = false;
   bool entrouNoJogo = false;
-  static bool primeiraAparicao = true; // Deixo como estático para que o valor seja guardado na classe, não no objeto
+  static bool primeiraAparicao = true;
 
   StatusDoJogador statusDoJogador;
   GameStateManager estadoDoJogo;
 
   final Vector2 _foraDaTela = Vector2(-100, -100);
 
-  Pesadelo({required this.statusDoJogador, required this.estadoDoJogo}) :super(
+  Pesadelo({
+    required this.statusDoJogador,
+    required this.estadoDoJogo,
+  }) : super(
     size: Vector2.all(MapTile.tileSize),
     animation: CharacterSpriteSheet(fileName: 'pesadelo.png').getAnimation(),
-    speed: 30,
+    speed: 20,
     position: Vector2(-100, -100),
-  ){
+  ) {
     priority = -1;
   }
 
   @override
-  Future<void> onLoad() {
+  Future<void> onLoad() async {
     pesadeloFace = CharacterSpriteSheet.getRostoPesadelo();
-
-    return super.onLoad();
+    await super.onLoad();
+    // ⚠️ Sem CollisionArea → atravessa tudo
   }
-
 
   @override
   void update(double dt) {
     super.update(dt);
 
-    if(entrouNoJogo && primeiraAparicao){
-      WidgetsBinding.instance.addPostFrameCallback((_) { // eperar o context estar pronto
+    // Mostra a primeira vez que aparece
+    if (entrouNoJogo && primeiraAparicao) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         TalkDialog.show(
           gameRef.context,
           [
@@ -103,73 +105,45 @@ class Pesadelo extends SimpleEnemy{
             ),
             // ... restante dos diálogos
           ],
-        ).then((_) {
-          showDialog(context: context,
-              builder: (_) {
-                return Dialogexplicativa(
-                  imageUrl: AssetsUrl.explicacao_2,
-                  explanation: RichText(
-                      text: const TextSpan(
-                        style: TextStyle(fontSize: 20, color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Esse é o Pesadelo, ele é a própria encarnação das aulas de padrões de projeto que você não prestou atenção.\n'
-                                    'Ele vai te perseguir e se te pegar, irá fazer você responder uma pergunta com ',
-                            ),
-                            TextSpan(
-                                text: 'Análise de diagramas de classe.\n',
-                                style:  TextStyle(fontSize: 20, color: Colors.cyan)
-                            ),
-                            TextSpan(
-                                text: 'Tome muito cuidado com ele...',
-                            )
-                          ]
-                      )),
-                  onClose: (){
-
-                  },
-                );
-              });
-          }
         );
       });
-
       primeiraAparicao = false;
     }
 
-    if(estadoDoJogo.value == GameState.Pesadelo && !entrouNoJogo) {
-      gameRef.lighting!.color = Colors.black.withOpacity(0.9); // Deixa o jogo de noite
-      position = Vector2(gameRef.player!.position.x + (3 * MapTile.tileSize) ,gameRef.player!.position.y); // Reseta a posição do Pesadelo
-      entrouNoJogo = true; // Marca que já entrou no jogo
+    // Ativa quando o jogo entra no estado Pesadelo
+    if (estadoDoJogo.value == GameState.Pesadelo && !entrouNoJogo) {
+      gameRef.lighting!.color = Colors.black.withOpacity(0.9);
+      position = Vector2(
+        gameRef.player!.position.x + (3 * MapTile.tileSize),
+        gameRef.player!.position.y,
+      );
+      entrouNoJogo = true;
     }
 
-    if (!entrouEmContatoComOPlayer) {
-      moveToPosition(gameRef.player!.position,speed: speed);
-      seeAndMoveToPlayer(
-        visionAngle: 80,
-        runOnlyVisibleInScreen: false,
-        radiusVision: MapTile.tileSize * 30,
-        closePlayer: (player) async {
-          FlameAudio.play(AssetsUrl.som_hit_inimigo);
-          final perguntaArrasto = await DbHelper().buscarPerguntaAleatoria();
-          entrouEmContatoComOPlayer = true; // Marca que já falou
+    // Movimento + checagem de distância com o player
+    if (!entrouEmContatoComOPlayer && gameRef.player != null) {
+      // Persegue o player (sem colisão)
+      moveToPosition(gameRef.player!.position, speed: speed);
 
+      // Detecta se encostou no player
+      if (position.distanceTo(gameRef.player!.position) < MapTile.tileSize * 0.8) {
+        entrouEmContatoComOPlayer = true;
+
+        FlameAudio.play(AssetsUrl.som_hit_inimigo);
+        DbHelper().buscarPerguntaAleatoria().then((perguntaArrasto) {
           showDialog(
             context: context,
             barrierDismissible: false,
             builder: (_) => DialogArrasto(
-
               pergunta: perguntaArrasto!,
               onRespondido: (acertou) {
-                // Mostra feedback
                 statusDoJogador.perguntaPesadelo(acertou);
-                position = _foraDaTela;
+                position = _foraDaTela; // "desaparece" após interação
               },
             ),
           );
-        }
-      );
-      return;
+        });
+      }
     }
   }
 }
