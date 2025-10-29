@@ -36,7 +36,7 @@ class Pesadelo extends SimpleEnemy {
   }) : super(
     size: Vector2.all(MapTile.tileSize),
     animation: CharacterSpriteSheet(fileName: 'pesadelo.png').getAnimation(),
-    speed: 20,
+    speed: 10,
     position: Vector2(-100, -100),
   ) {
     priority = -1;
@@ -111,17 +111,18 @@ class Pesadelo extends SimpleEnemy {
     }
 
     // Ativa quando o jogo entra no estado Pesadelo
+
     if (estadoDoJogo.value == GameState.Pesadelo && !entrouNoJogo) {
       gameRef.lighting!.color = Colors.black.withOpacity(0.9);
       position = Vector2(
-        gameRef.player!.position.x + (3 * MapTile.tileSize),
+        gameRef.player!.position.x + (10 * MapTile.tileSize),
         gameRef.player!.position.y,
       );
       entrouNoJogo = true;
     }
 
     // Movimento + checagem de distância com o player
-    if (!entrouEmContatoComOPlayer && gameRef.player != null) {
+    if (!entrouEmContatoComOPlayer && gameRef.player != null && entrouNoJogo) {
       // Persegue o player (sem colisão)
       moveToPosition(gameRef.player!.position, speed: speed);
 
